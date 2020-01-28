@@ -1,0 +1,138 @@
+---
+title: "01_find_overlap"
+---
+
+Step: 01    
+Purpose: find overlapping FoodCodes that overlap with what is available in Knight Lab's Food Tree git   
+
+```{r setup}
+library(dplyr)
+#load in Knight lab food taxonomy
+mct<- read.delim("../food_tree_gits/food_graphlan-master/data/mct.taxonomy.txt", sep="\t")
+dim(mct)
+
+#now load in the FL100 unique list of foods from ASA24-2016
+items<- read.delim("../data/00_formatted_foods/ITEMS_formatted.txt", sep="\t")
+dim(items)
+
+#load the ASA24-2014 foodcodes
+inf<- read.delim("../data/00_formatted_foods/INFMYPHEI_formatted.txt", sep="\t")
+dim(inf)
+```
+
+clean up the food description columns
+```{r}
+#replace spaces with underscores
+mct$Main.food.description<-trimws(mct$Main.food.description)
+mct$Main.food.description<- gsub(" ", "_", mct$Main.food.description)
+
+#remove multiple underscores
+items$Food_Description<- gsub("[[:punct:]]+",'_', items$Food_Description)
+inf$Food_Description<- gsub("[[:punct:]]+",'_', inf$Food_Description)
+
+```
+
+
+Remember that some of the FoodCodes are duplicated in our data because the food descriptions differ
+```{r}
+items.dup<-items[duplicated(items$FoodCode)|duplicated(items$FoodCode, fromLast=TRUE),]
+inf.dup<-inf[duplicated(inf$FoodCode)|duplicated(inf$FoodCode, fromLast=TRUE),]
+
+```
+
+
+find overlap  
+```{r}
+library(gplots)
+fc.venn<-venn(list("MCT" = mct$FoodID,  "Items" = items$FoodCode, "INF" = inf$FoodCode))
+#887 overlap 
+#141 INF + MCT only 
+#1313 Items + MCT only
+#101 ASA24-2014 foods do not have taxonomy assigned yet
+#3 ASA24-2016 foods do not have taxonomy assigned yet 
+
+#get the foods that need to be manually curated
+inf.tmp<- data.frame(attr(fc.venn, "intersections")$'INF')
+inf.man<- inf %>% filter(FoodCode %in% inf.tmp[,1])
+items.tmp<-data.frame(attr(fc.venn, "intersections")$"Items")
+items.man<-items %>% filter(FoodCode %in% items.tmp[,1])
+
+venn(list("MCT" = trimws(mct$Main.food.description),  
+          "Items" = trimws(items$Food_Description), 
+          "INF" = trimws(inf$Food_Description)))
+
+
+```
+
+merge to get A:B:C overlap  
+a = mct   
+b = items  
+c = inf  
+```{r}
+#remember some food codes are duplicated because the food descriptions differ
+abc<- merge(merge(mct, items, by.x = "FoodID", by.y = "FoodCode"), inf, by.x= "FoodID", by.y="FoodCode")
+length(unique(abc$FoodID)) #887
+'%nin%'<-Negate('%in%')
+ab<- merge(mct, items, by.x = "FoodID", by.y="FoodCode") %>% filter(FoodID %nin% inf$FoodCode)
+length(unique(ab$FoodID)) #1313 correct
+
+ac<- merge(mct,inf, by.x="FoodID", by.y="FoodCode") %>% filter(FoodID %nin% items$FoodCode)
+length(unique(ac$FoodID)) #141 correct
+
+#check
+venn(list(abc$FoodID, ac$FoodID, ab$FoodID))
+```
+
+find which foods don't have matching food descriptions
+```{r}
+ab$check<- ifelse(as.character(ab$Main.food.description) == as.character(ab$Food_Description),"yes", "no")
+
+ac$check<- ifelse(as.character(ac$Main.food.description) == as.character(ac$Food_Description),"yes", "no")
+
+abc$check_ab<- ifelse(as.character(abc$Main.food.descriptio) == as.character(abc$Food_Description.x), 1, 0)
+abc$check_ac<- ifelse(as.character(abc$Main.food.description) == as.character(abc$Food_Description.y), 1, 0)
+abc$check_bc<- ifelse(as.character(abc$Food_Description.x) == as.character(abc$Food_Description.y), 1, 0)
+abc$check_all<- ifelse(rowSums(abc[,6:8]) == 3, 1, 0)
+```
+
+save these foods that need to be checked
+```{r eval=F}
+write.csv(subset(ab, check == "no"), file="../data/01_find_overlap/check_mct_items.csv", row.names=F)
+write.csv(subset(ac, check=="no"), file="../data/01_find_overlap/check_mct_infmyphei.csv", row.names=F)
+write.csv(subset(abc, check_all == 0), file="../data/01_find_overlap/check_mct_items_infmyphei.csv", row.names=F)
+```
+
+save the foods that need to have taxonomy manually curated   
+```{r eval=F}
+write.csv(inf.man, file="../data/01_find_overlap/foodcodes_manual_taxonomy_inf.csv", row.names=F)
+write.csv(items.man, file="../data/01_find_overlap/foodcodes_manual_taxonomy_items.csv", row.names=F)
+```
+
+
+######### WIP ########## 
+
+for the purpose of troubleshooting and making our first food tree, let's assume that the taxonomy for the overlapping foodcodes are ok and nothing needs to be checked (NOTE THIS IS WRONG BECAUSE WE NEED TO CLOSELY CHECK DUPLICATED FOODCODES E.G. Cappucchino with SOY vs Cappucchino with WHOLE MILK (same foodcode):   
+
+rbind the three data sets of foocodes   
+```{r}
+#rbind the foods unique to items or inf, retain only the foodid and taxonomy
+foods1<- rbind(ab, ac) %>% select(FoodID, taxonomy)
+
+#retain only the foodid and taxonomy for the trifecta foods
+tri<- abc %>% select(FoodID, taxonomy)
+
+#rbind to the first set of foods and uniquify 
+foods2<- rbind(foods1, tri) %>% unique()
+```
+
+replace the ; with . to make it graphlan-friendly
+```{r}
+foods2$taxonomy<- gsub(";", ".", foods2$taxonomy)
+```
+
+write this list to use as input into graphlan 
+```{r}
+write.table(foods2[,2], file="../data/01_find_overlap/fl100_food_taxonomy_PRACTICE.txt", 
+            sep="\t", row.names = F, quote=F)
+```
+
