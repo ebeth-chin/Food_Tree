@@ -1,3 +1,6 @@
+# Adapted from Knight Lab Food_Tree github: https://github.com/knights-lab/Food_Tree 
+
+
 # Create the correctly formatted input file to use for making the food tree
  # - should only have to run this once on the starting file
  # - Input is a text file that contains columns with extra characters that need to be newick friendly
