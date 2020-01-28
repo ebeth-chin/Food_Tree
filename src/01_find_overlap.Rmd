@@ -108,6 +108,12 @@ write.csv(inf.man, file="../data/01_find_overlap/foodcodes_manual_taxonomy_inf.c
 write.csv(items.man, file="../data/01_find_overlap/foodcodes_manual_taxonomy_items.csv", row.names=F)
 ```
 
+safe the duplicated foods
+```{r}
+write.csv(inf.dup, file="../data/01_find_overlap/duplicated_inf.csv", row.names=F)
+write.csv(items.dup, file="../data/01_find_overlap/duplicated_items", row.names=F)
+```
+
 
 ######### WIP ########## 
 
@@ -131,8 +137,13 @@ foods2$taxonomy<- gsub(";", ".", foods2$taxonomy)
 ```
 
 write this list to use as input into graphlan 
-```{r}
+```{r eval=F}
 write.table(foods2[,2], file="../data/01_find_overlap/fl100_food_taxonomy_PRACTICE.txt", 
             sep="\t", row.names = F, quote=F)
+```
+
+write the list with the foodcodes to help with manual curation and checking the duplicates  
+```{r}
+write.csv(foods2, file="../data/01_find_overlap/fl100_food_taxonomy_and_FoodCodes.csv", row.names=F )
 ```
 
