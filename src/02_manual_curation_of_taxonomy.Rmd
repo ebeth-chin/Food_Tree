@@ -1,0 +1,137 @@
+---
+title: "02_manual_taxonomy_curation"
+---
+
+This step is for manual curation of taxonony for:   
+1) unique foods not included in Johnson et al. (mct.reduced.taxonomy)  
+  1a) items unique to ASA24-2014 and 2016 separately, then will rbind to the final taxonomy list  
+2) duplicated foodcodes with some trailing details differing (e.g. coffee latte and coffee latte w/ soy milk have the same foodcode)   
+  2a) For foods with variations like "W/O FAT", DL suggests that we can collapse these into a single foodcode for v1.0   
+
+*NOTE* some foodcodes are identical, but the descriptions are slightly different between ASA24-2016 (MCT and part of FL100) and ASA24-2014 (FL100)-- DL says for tree v1.0, we can collapse these foods into a single foodcode    
+
+*NOTE* KEEP TRACK OF Foods collapsed into single foodcodes! The amounts need to be assigned into the parent FoodCode for "OTU" calculation (g)   
+
+import unique foods to be manually curated 
+```{r setup1}
+library(dplyr)
+inf.man<- read.csv("../data/01_find_overlap/foodcodes_manual_taxonomy_inf.csv", header=T)
+```
+
+bring in the duplicated foodcodes. we just want to pick out *super* different ones like latte w/ cow's milk vs latte w/ soy milk   
+```{r setup2}
+all.dupes<- read.csv("../data/01_find_overlap/duplicated_foods_qc.csv", header=T)
+```
+
+bring in the taxonomy list   
+```{r}
+mct<-read.table("../food_tree_gits/Food_Tree-master/R/output/mct.taxonomy.txt", sep="\t", header=T)
+tax<- read.csv("../data/01_find_overlap/fl100_practice_taxonomy_and_FoodCodes.csv", header=T)
+```
+
+here's the knight lab coding scheme: 
+```{r}
+codes<- read.table("../food_tree_gits/Food_Tree-master/raw_data/coding.scheme.txt", sep="\t", header=T)
+```
+
+
+check out your data  
+```{r peep}
+dim(inf.man) #101 foods
+dim(all.dupes) #191 foods total
+
+dim(mct) #1453 foods
+dim(tax) #2343 
+length(unique(tax$FoodID)) 
+
+#tehre are 2431 unique foodcodes reported in FL100 length(unique((rbind(items, inf)$FoodCode))
+```
+
+First, let's check out the duplicated foodcodes that we want to preserve. I previously went into the original file and denoted which duplicate to keep (keep == 1).     
+```{r}
+View(all.dupes)
+#get the duplicates to keep
+keep.dupes <- all.dupes %>% filter(Keep == 1) #77 foods to keep
+#see if the correct one (or at least 1 version of the foodcode) already exists in the 'practice' list
+check.dupes<- merge(keep.dupes, tax, by.x = "FoodCode", by.y= "FoodID", all.x=T)
+View(check.dupes)
+```
+
+How many of the duplicated foodcodes overlap with the ones picked out for manual curation?   
+```{r}
+venn(list("man"= unique(inf.man$FoodCode), 
+          "dupes" = unique(all.dupes$FoodCode))) #only 8 of them overlap 
+
+#get rid of any foodcodes in the dupes
+'%nin%'<- Negate('%in%')
+man2<- inf.man %>% filter(FoodCode %nin% all.dupes$FoodCode ) #80 foodcodes now 
+View(man2)
+```
+
+now combine these with the 'check.dupes' and export to csv to manually input 
+
+```{r}
+man3<- rbind(man2, check.dupes[,1:2])
+man4<- man3 %>% filter(FoodCode %nin% tax$FoodID)
+
+```
+
+add known taxonomy levels
+```{r}
+source("../lib/create.taxonomy.R")
+create.taxonomy(foods=man4, outdir="../data/02_manual_taxonomy_curation/manual_curation_L1toL4.txt")
+```
+
+search the MCT file to help get ideas for L4s: 
+
+first break up the taxonomy because i'm going blind looking at the single column
+```{r}
+mct<- separate(mct, "taxonomy", into= c("L1", "L2", "L3", "L4", "L5"), 
+               sep=";", remove=T)
+```
+
+
+```{r}
+library(dplyr)
+library(stringr)
+#11830800	Instant_breakfast_powder_not_reconstituted
+mct %>% filter(str_detect(FoodID, "^11")) %>% View()
+#14010100	Cheese_Cheddar_or_American_type_NS_as_to_natural_or_processed
+mct %>% filter(str_detect(FoodID, "^14")) %>% View()
+#25210610	Frankfurter_or_hot_dog_beef_lowfat
+mct %>% filter(str_detect(FoodID, "^25")) %>% View()
+#26100230	Fish_stick_patty_or_fillet_NS_as_to_type_breaded_or_battered_baked
+mct %>% filter(str_detect(FoodID, "^26")) %>% View()
+#28340530	Chicken_soup
+mct %>% filter(str_detect(FoodID, "^28")) %>% View()
+#31103000	Egg_whole_boiled
+mct %>% filter(str_detect(FoodID, "^31")) %>% View()
+#32104900	Egg_omelet_or_scrambled_egg_NS_as_to_fat_added_in_cooking
+mct %>% filter(str_detect(FoodID, "^32")) %>% View()
+#41430000	Protein_powder_NFS
+mct %>% filter(str_detect(FoodID, "^41")) %>% View()
+mct %>% filter(str_detect(Main.food.description, regex("protein|whey", ignore_case=T))) %>% View()
+#51121040	Bread_garlic_toasted
+mct %>% filter(str_detect(FoodID, "^51")) %>% View()
+#53105260	Cake_chocolate_devils_food_or_fudge_with_icing_coating_or_filling_made_from_home_recipe_or_purchased_ready_to_eat
+mct %>% filter(str_detect(FoodID, "^53") & str_detect(L3,"L3_Cakes")) %>% View()
+#53209000	Cookie_chocolate_chocolate_sandwich_or_chocolate_coated_or_striped
+mct %>% filter(str_detect(FoodID, "^53") & str_detect(L3,"L3_Cookies")) %>% View()
+mct %>% filter(str_detect(FoodID, "^53") & str_detect(L3, regex("bar", ignore_case=T))) %>% View()
+mct %>% filter(str_detect(FoodID, "^54")) %>% View()
+mct %>% filter(str_detect(FoodID, "^56") & str_detect(Main.food.description, regex("^rice", ignore_case=T))) %>% View()
+mct %>% filter(str_detect(FoodID, "^57")) %>% View()
+#58100110	Burrito_with_beef_and_beans
+mct %>% filter(str_detect(FoodID, "^581")) %>% View()
+mct %>% filter(str_detect(FoodID, "^581") & str_detect(Main.food.description, regex("macaroni or noodles with cheese", ignore_case=T))) %>% View()
+mct %>% filter(str_detect(FoodID, "^581") & str_detect(Main.food.description, regex("rice", ignore_case=T))) %>% View()
+#71201010	White_potato_chips
+mct %>% filter(str_detect(FoodID, "^712")) %>% View()
+mct %>% filter(str_detect(FoodID, "^744")) %>% View()
+#83105100	Fruit_dressing_made_with_honey_oil_and_water
+mct %>% filter(str_detect(FoodID, "^83")) %>% View()
+#92560100	Gatorade_Thirst_Quencher_sports_drink
+mct %>% filter(str_detect(FoodID, "^92")) %>% View()
+mct %>% filter(str_detect(FoodID, "^94")) %>% View()
+```
+
