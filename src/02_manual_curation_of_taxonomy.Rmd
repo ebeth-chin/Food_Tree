@@ -51,7 +51,7 @@ First, let's check out the duplicated foodcodes that we want to preserve. I prev
 ```{r}
 View(all.dupes)
 #get the duplicates to keep
-keep.dupes <- all.dupes %>% filter(Keep == 1) #77 foods to keep
+keep.dupes <- all.dupes %>% filter(Keep == 1) #76 foods to keep
 #see if the correct one (or at least 1 version of the foodcode) already exists in the 'practice' list
 check.dupes<- merge(keep.dupes, tax, by.x = "FoodCode", by.y= "FoodID", all.x=T)
 View(check.dupes)
@@ -74,7 +74,56 @@ now combine these with the 'check.dupes' and export to csv to manually input
 man3<- rbind(man2, check.dupes[,1:2])
 man4<- man3 %>% filter(FoodCode %nin% tax$FoodID)
 
+fc.venn<-gplots::venn(list("unique FoodCodes"= man2$FoodCode,
+                  "dupe FoodCodes" = check.dupes$FoodCode,
+                  "done FoodCodes" = tax$FoodID))
 ```
+
+##################################### 
+For the Duplicated Food Codes:
+
+Get the duplicated food codes so that we can modify L6 (food description) for these then add back to the final list   
+```{r}
+dupes.man<- attr(fc.venn,"intersections")$`dupe FoodCodes:done FoodCodes`
+dupes.man2<- check.dupes %>% filter(FoodCode %in% dupes.man)
+dupes.man2<- separate(dupes.man2, "taxonomy", into= c("L1", "L2", "L3", "L4", "L5", "Food.Description"), 
+               sep="\\.", remove=T)
+dupes.man2$taxonomy2<- paste0(dupes.man2$L1,".", 
+                              dupes.man2$L2,".",
+                              dupes.man2$L3,".", 
+                              dupes.man2$L4, ".", 
+                              dupes.man2$L5, ".", 
+                              dupes.man2$Food_Description)
+```
+
+Now remove these food codes from our initial taxonomy list:  
+```{r}
+tax.dupes.rm<- tax %>% filter(FoodID %nin% dupes.man2$FoodCode)
+dim(tax) #2343
+dim(tax.dupes.rm) #2277 
+length(unique(dupes.man2$FoodCode)) #66 correct (2277 + 66 = 2343)
+
+#now add this back
+colnames(dupes.man2)[1]<- "FoodID"
+colnames(dupes.man2)[10]<-"taxonomy"
+tax.dupes.new<- rbind(tax.dupes.rm, dupes.man2[,c("FoodID", "taxonomy")])
+dim(tax.dupes.new) #2344
+dim(dupes.man2) #67, correct (67+2277)
+length(unique(tax.dupes.new$FoodID)) #2343, correct
+tax.dupes.new[duplicated(tax.dupes.new$FoodID),]
+
+```
+
+These are the only two duplicate foodcodes: 
+ FoodID
+ 92101900
+ 92101900
+                                                                                                                       taxonomy
+2340            L1_Sugars_Sweets_and_Beverages.L2_Nonalcoholic_beverages.L3_Coffee.L4_Coffee.L5_Coffee_from_ground.Coffee_latte
+2341 L1_Sugars_Sweets_and_Beverages.L2_Nonalcoholic_beverages.L3_Coffee.L4_Coffee.L5_Coffee_from_ground.Coffee_latte_W_SOY_MILK
+
+##################################
+For the Unique Food Codes: 
 
 add known taxonomy levels
 ```{r}
@@ -90,7 +139,7 @@ mct<- separate(mct, "taxonomy", into= c("L1", "L2", "L3", "L4", "L5"),
                sep=";", remove=T)
 ```
 
-
+now search the taxonomy file for inspiration and add them in excel  
 ```{r}
 library(dplyr)
 library(stringr)
@@ -134,4 +183,8 @@ mct %>% filter(str_detect(FoodID, "^83")) %>% View()
 mct %>% filter(str_detect(FoodID, "^92")) %>% View()
 mct %>% filter(str_detect(FoodID, "^94")) %>% View()
 ```
+
+#######################################
+now that the manual adding is done, we need to collapse the levels and remove special characters
+
 
