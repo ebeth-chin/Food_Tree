@@ -1,0 +1,90 @@
+FoodCode	Food_Description	L1	L2	L3	L4	L5	Note	Use2016
+9		"Sugars, Sweets, and Beverages"	NA	NA	NA		remove	0
+11830800	Instant_breakfast_powder_not_reconstituted	Milk and Milk Products	Milk and milk drinks	"Milk, dry, and powdered mixtures with"			L4 and 5 empty	0
+14010100	Cheese_Cheddar_or_American_type_NS_as_to_natural_or_processed	Milk and Milk Products	Cheeses	"Cheese, NS as to type"			L4 and 5 empty	0
+14104010	Cheese_natural_Cheddar_or_American_type	Milk and Milk Products	Cheeses	Natural cheeses	Natural cheeses	Cheddar_Colby_Feta_Fontina_Goat	done	0
+14410200	Cheese_processed_American_or_Cheddar_type	Milk and Milk Products	Cheeses	Processed cheeses and cheese spreads	Cheese_processed		done	0
+14410300	Cheese_processed_American_or_Cheddar_type_lowfat	Milk and Milk Products	Cheeses	Processed cheeses and cheese spreads	Cheese_processed		done	0
+14410400	Cheese_processed_Swiss	Milk and Milk Products	Cheeses	Processed cheeses and cheese spreads	Cheese_processed		done	0
+14502040	Imitation_cheese_American_or_cheddar_type_low_cholesterol	Milk and Milk Products	Cheeses	Imitation cheeses	Imitation cheeses		done	0
+25210610	Frankfurter_or_hot_dog_beef_lowfat	"Meat, Poultry, Fish, and Mixtures"	"Organ meats, sausages and lunchmeats"	"Frankfurters, sausages, lunchmeats, meat spreads"	Frankfurters		done	0
+25221410	Pork_sausage_fresh_bulk_patty_or_link_cooked	"Meat, Poultry, Fish, and Mixtures"	"Organ meats, sausages and lunchmeats"	"Frankfurters, sausages, lunchmeats, meat spreads"	Sausages		done	0
+25221420	Pork_sausage_brown_and_serve_cooked	"Meat, Poultry, Fish, and Mixtures"	"Organ meats, sausages and lunchmeats"	"Frankfurters, sausages, lunchmeats, meat spreads"	Sausages		done	0
+25221920	Vienna_sausage_chicken_canned	"Meat, Poultry, Fish, and Mixtures"	"Organ meats, sausages and lunchmeats"	"Frankfurters, sausages, lunchmeats, meat spreads"	Sausages		done	0
+26100230	Fish_stick_patty_or_fillet_NS_as_to_type_breaded_or_battered_baked	"Meat, Poultry, Fish, and Mixtures"	Fish and shellfish	Finfish	Finfish_NS	Fish_NS	done	0
+28340530	Chicken_soup	"Meat, Poultry, Fish, and Mixtures"	"Frozen and shelf-stable plate meals, soups, and gravies"	"Soups, broths, extracts from meat, poultry, fish base"	"Poultry, soups"		done	0
+31103000	Egg_whole_boiled	Eggs	Eggs	Chicken eggs	Egg_whole_or_white		done	0
+31104000	Egg_whole_poached	Eggs	Eggs	Chicken eggs	Egg_whole_or_white		done	0
+31105000	Egg_whole_fried	Eggs	Eggs	Chicken eggs	Egg_whole_or_white		done	0
+31109000	Egg_white_only_cooked_NS_as_to_fat_added_in_cooking	Eggs	Eggs	Chicken eggs	Egg_whole_or_white		done	0
+31109010	Egg_white_only_cooked_fat_not_added_in_cooking	Eggs	Eggs	Chicken eggs	Egg_whole_or_white		done	0
+31109020	Egg_white_only_cooked_fat_added_in_cooking	Eggs	Eggs	Chicken eggs	Egg_whole_or_white		done	0
+32104900	Egg_omelet_or_scrambled_egg_NS_as_to_fat_added_in_cooking	Eggs	Egg mixtures	Egg dishes made with whole eggs	Egg_omelet_or_scrambled		done	0
+32104950	Egg_omelet_or_scrambled_egg_fat_not_added_in_cooking	Eggs	Egg mixtures	Egg dishes made with whole eggs	Egg_omelet_or_scrambled		done	0
+32105000	Egg_omelet_or_scrambled_egg_fat_added_in_cooking_W_VEGETABLE_OIL_NFS_INCLUDE_OIL_NFS	Eggs	Egg mixtures	Egg dishes made with whole eggs	Egg_omelet_or_scrambled		done	0
+32105010	Egg_omelet_or_scrambled_egg_with_cheese_W_VEGETABLE_OIL_NFS_INCLUDE_OIL_NFS	Eggs	Egg mixtures	Egg dishes made with whole eggs	Egg_omelet_or_scrambled		done	0
+32105010	Egg_omelet_or_scrambled_egg_with_ham_or_bacon_and_cheese	Eggs	Egg mixtures	Egg dishes made with whole eggs	Egg_omelet_or_scrambled		done	0
+32105030	Egg_omelet_or_scrambled_egg_with_ham_or_bacon_WO_FAT_OR_W_NONSTICK_SPRAY_INCLUDE_PAM_	Eggs	Egg mixtures	Egg dishes made with whole eggs	Egg_omelet_or_scrambled		done	0
+32105040	Egg_omelet_or_scrambled_egg_with_dark_green_vegetables	Eggs	Egg mixtures	Egg dishes made with whole eggs	Egg_omelet_or_scrambled		done	0
+32105055	Egg_omelet_or_scrambled_egg_with_cheese_and_vegetables_other_than_dark_green	Eggs	Egg mixtures	Egg dishes made with whole eggs	Egg_omelet_or_scrambled		done	0
+32105085	Egg_omelet_or_scrambled_egg_with_ham_or_bacon_cheese_and_tomatoes	Eggs	Egg mixtures	Egg dishes made with whole eggs	Egg_omelet_or_scrambled		done	0
+32105121	Egg_omelet_or_scrambled_egg_with_sausage_and_cheese	Eggs	Egg mixtures	Egg dishes made with whole eggs	Egg_omelet_or_scrambled		done	0
+32105122	Egg_omelet_or_scrambled_egg_with_sausage_W_VEGETABLE_OIL_NFS_INCLUDE_OIL_NFS	Eggs	Egg mixtures	Egg dishes made with whole eggs	Egg_omelet_or_scrambled		done	0
+32105130	Egg_omelet_or_scrambled_egg_with_onions_peppers_tomatoes_and_mushrooms_W_VEGETABLE_OIL_NFS_INCLUDE_OIL_NFS	Eggs	Egg mixtures	Egg dishes made with whole eggs	Egg_omelet_or_scrambled		done	0
+41430000	Protein_powder_NFS						Use 2016 FoodCode _95230030 (Protein_powder_NFS)	1
+41430010	Protein_supplement_powdered						Use 2016 FoodCode _95230030 (Protein_powder_NFS)	1
+41430310	Protein_diet_powder_with_soy_and_casein	Sugars_Sweets_and_Beverages	Formulated_nutrition_beverages_energy_drinks_sports_drinks_function	Nutrition_powders			"No comparable 2016 FoodCode, modified taxa levels"	
+41435110	High_protein_bar_candy_like_soy_and_milk_base	Grain Product	"Cakes, cookies, pies, pastries, bars"	Bars	Nutrition_bars_protein_energy_meal		"No comparable 2016 FoodCode, modified taxa levels"	
+41435500	Clif_Bar						Use 2016 FoodCode _53720200 (Clif Bar)	1
+41440010	Meal_replacement_or_supplement_liquid_soy_base_high_protein						Use 2016 FoodCode_ _95120010 (Nutritional drink or meal replacement high protein ready to drink NFS)	1
+41601170	Bean_and_rice_soup						done	0
+51121040	Bread_garlic_toasted	Grain Product	Yeast	"White breads, rolls"	Bread_with_additions	Bread_garlic_or_onion	done	0
+53105260	Cake_chocolate_devils_food_or_fudge_with_icing_coating_or_filling_made_from_home_recipe_or_purchased_ready_to_eat	Grain Product	"Cakes, cookies, pies, pastries, bars"	Cakes	Cakes	Cake_chocolate	done	0
+53115600	Cake_poppyseed_without_icing	Grain Product	"Cakes, cookies, pies, pastries, bars"	Cakes	Cakes	_Cake_pound_pumpkin_raisin_nut	No premade logical L5; no empty L5s for L4==cake	0
+53120260	Cake_white_with_icing_made_from_home_recipe_or_purchased_ready_to_eat	Grain Product	"Cakes, cookies, pies, pastries, bars"	Cakes	Cakes	Cake_white	done	0
+53121200	Cake_yellow_standard_type_mix_eggs_and_water_added_to_dry_mix_with_icing	Grain Product	"Cakes, cookies, pies, pastries, bars"	Cakes	Cakes	Cake_yellow	done	0
+53121260	Cake_yellow_with_icing_made_from_home_recipe_or_purchased_ready_to_eat	Grain Product	"Cakes, cookies, pies, pastries, bars"	Cakes	Cakes	Cake_yellow	done	0
+53209000	Cookie_chocolate_chocolate_sandwich_or_chocolate_coated_or_striped	Grain Product	"Cakes, cookies, pies, pastries, bars"	Cookies	Cookies	Cookie_sandwich	done	0
+53243100	Cookie_rich_all_chocolate_with_chocolate_filling_or_chocolate_chips	Grain Product	"Cakes, cookies, pies, pastries, bars"	Cookies	Cookies	Cookie_sandwich	done	0
+53540200	Breakfast_bar_cereal_crust_with_fruit_filling_lowfat	Grain Product	"Cakes, cookies, pies, pastries, bars"	Bars	Cereal_bars_granola_bars		done	0
+53540300	Fiber_One_Chewy_Bar						Use 2016 FoodCode _53710400 (Fiber One Chewy Bar)	1
+53540802	Kashi_TLC_Chewy_Granola_Bar						Use 2016 FoodCode _53710802 (Kashi TLC Chwy Granola Bar)	1
+53540806	Kashi_TLC_Crunchy_Granola_Bar						Use 2016 FoodCode _53710806 (Kashi TLC Crunchy Granola Bar)	1
+53542100	Granola_bar_oats_sugar_raisins_coconut	Grain Product	"Cakes, cookies, pies, pastries, bars"	Bars	Cereal_bars_granola_bars		done	0
+53542200	Granola_bar_oats_fruit_and_nuts_lowfat	Grain Product	"Cakes, cookies, pies, pastries, bars"	Bars	Cereal_bars_granola_bars		done	0
+53544230	Granola_bar_oats_nuts_coated_with_non_chocolate_coating						Use 2016 FoodCode _53714230 (_Granola bar oats nuts coated with non chocolate coating)	1
+53544250	Granola_bar_coated_with_non_chocolate_coating						Use 2016 FoodCode _53714250 (_Granola bar coated with non chocolate coating)	1
+53544450	PowerBar_fortified_high_energy_bar						Use 2016 FoodCode _53720300 (PowerBar) 	1
+54101010	Cracker_animal	Grain Product	Crackers and salty snacks from grain	Sweet crackers			done	0
+54305500	Crispbread_wheat_or_rye_extra_crispy	Grain Product	Crackers and salty snacks from grain	Nonsweet crackers	Nonsweet crackers	Crispbread_rye	done	0
+56204990	Rice_white_cooked_regular_NS_as_to_fat_added_in_cooking						Use 2016 FoodCode _56205330 (_Rice white and wild cooked NS as to fat added in cooking)	1
+56205010	Rice_white_cooked_regular_fat_not_added_in_cooking						Use 2016 FoodCode _56205300 (_Rice white and wild cooked fat not added in cooking)	1
+56205110	Rice_brown_cooked_regular_fat_not_added_in_cooking						Use 2016 FoodCode _56205310 (_Rice brown and wild cooked fat not added in cooking)	1
+56205420	Rice_white_cooked_regular_fat_added_in_cooking						Use 2016 FoodCode _56205320 (_Rice white and wild cooked fat added in cooking)	1
+56205510	Rice_brown_cooked_regular_fat_added_in_cooking						Use 2016 FoodCode _56205340 (_Rice brown and wild cooked fat added in cooking)	1
+56205530	Rice_brown_cooked_instant_NS_as_to_fat_added_in_cooking						Use 2016 FoodCode _56205350 (_Rice brown and wild cooked NS as to fat added in cooking)	1
+57124500	Cinnamon_Grahams_General_Mills	Grain Product	"Cereals, not cooked or NS as to cooked"	Ready-to-eat cereals			done	0
+58100110	Burrito_with_beef_and_beans	Grain Product	"Grain mixtures, frozen plate meals, soups"	"Mixtures, mainly grain, pasta, or bread"	"Mixtures, mainly grain, pasta, or bread"	Burrito_chilaquiles_or_enchilada	done	0
+58100130	Burrito_with_beef_and_cheese_no_beans	Grain Product	"Grain mixtures, frozen plate meals, soups"	"Mixtures, mainly grain, pasta, or bread"	"Mixtures, mainly grain, pasta, or bread"	Burrito_chilaquiles_or_enchilada	done	0
+58100210	Burrito_with_chicken_and_beans	Grain Product	"Grain mixtures, frozen plate meals, soups"	"Mixtures, mainly grain, pasta, or bread"	"Mixtures, mainly grain, pasta, or bread"	Burrito_chilaquiles_or_enchilada	Use 2016 FoodCode _58100220 (_Burrito with chicken and beans)	1
+58100310	Burrito_with_beans_meatless	Grain Product	"Grain mixtures, frozen plate meals, soups"	"Mixtures, mainly grain, pasta, or bread"	"Mixtures, mainly grain, pasta, or bread"		Use 2016 FoodCode _58100320 (_Burrito with beans meatless)	1
+58101230	Flauta_with_beef	Grain Product	"Grain mixtures, frozen plate meals, soups"	"Mixtures, mainly grain, pasta, or bread"	"Mixtures, mainly grain, pasta, or bread"	Nachos_gordita_chimichanga_quesadilla_taquito	done	0
+58101530	Soft_taco_with_beef_cheese_lettuce_tomato_and_salsa	Grain Product	"Grain mixtures, frozen plate meals, soups"	"Mixtures, mainly grain, pasta, or bread"	"Mixtures, mainly grain, pasta, or bread"	Taco_or_tostada	done	0
+58145114	Macaroni_or_noodles_with_cheese_made_from_dry_mix_WO_FAT	Grain Product	"Grain mixtures, frozen plate meals, soups"	"Mixtures, mainly grain, pasta, or bread"	"Mixtures, mainly grain, pasta, or bread"	Macaroni_or_noodles_with_cheese	done	0
+58145115	Macaroni_or_noodles_with_cheese_from_boxed_mix_with_already_prepared_cheese_sauce	Grain Product	"Grain mixtures, frozen plate meals, soups"	"Mixtures, mainly grain, pasta, or bread"	"Mixtures, mainly grain, pasta, or bread"	Macaroni_or_noodles_with_cheese	done	0
+58145130	Macaroni_or_noodles_with_cheese_and_beef	Grain Product	"Grain mixtures, frozen plate meals, soups"	"Mixtures, mainly grain, pasta, or bread"	"Mixtures, mainly grain, pasta, or bread"	Macaroni_or_noodles_with_cheese	done	0
+58160220	Rice_with_vegetables_tomato_based_sauce_mixture	Grain Product	"Grain mixtures, frozen plate meals, soups"	"Mixtures, mainly grain, pasta, or bread"	"Mixtures, mainly grain, pasta, or bread"	Rice_with_vegetables_or_lentils	done	0
+58161110	Rice_casserole_with_cheese	Grain Product	"Grain mixtures, frozen plate meals, soups"	"Mixtures, mainly grain, pasta, or bread"	"Mixtures, mainly grain, pasta, or bread"	Mixed_rice_dishes	done	0
+58161300	White_rice_with_tomato_sauce	Grain Product	"Grain mixtures, frozen plate meals, soups"	"Mixtures, mainly grain, pasta, or bread"	"Mixtures, mainly grain, pasta, or bread"	Rice_with_vegetables_or_lentils	Use 2016 FoodCode _58160520 (_Rice white with tomatoes andor tomato based sauce NS as to fat added in cooking)	1
+58161310	Rice_brown_with_tomato_sauce	Grain Product	"Grain mixtures, frozen plate meals, soups"	"Mixtures, mainly grain, pasta, or bread"	"Mixtures, mainly grain, pasta, or bread"	Rice_with_vegetables_or_lentils	Use 2016 FoodCode _58161460 (_Rice brown with tomatoes andor tomato based sauce NS as to fat added in cooking)	1
+71201010	White_potato_chips	Vegetables	White potatoes and Puerto Rican starchy vegetables	"White potatoes, chips and sticks"	"White potatoes, chips and sticks"	White_potato_chips	"Use 2016 FoodCode _71201015	(_White potato chips regular cut)"	1
+74402310	Green_tomato_chile_sauce_raw_Salsa_de_tomate_verde_cruda	Vegetables	Tomatoes and tomato mixtures	Tomato sauces	Tomato sauces		done	0
+74403010	Tomato_sauce	Vegetables	Tomatoes and tomato mixtures	Tomato sauces	Tomato sauces		done	0
+83105100	Fruit_dressing_made_with_honey_oil_and_water	"Fats, Oils, and Salad Dressings"	Salad dressings	Regular salad dressings			done	0
+83205000	Italian_dressing_low_calorie	"Fats, Oils, and Salad Dressings"	Salad dressings	Light salad dressings			Use 2016 FoodCode _83205450 (_Italian dressing light)	1
+83205500	Italian_dressing_reduced_calorie_fat_free	"Fats, Oils, and Salad Dressings"	Salad dressings	Light salad dressings			Use 2016 FoodCode _83300600 (_Italian dressing fat free)	1
+83208000	Vinegar_sugar_and_water_dressing	"Fats, Oils, and Salad Dressings"	Salad dressings	Light salad dressings			done	0
+83210000	Creamy_dressing_made_with_sour_cream_andor_buttermilk_and_oil_diet_NS_as_to_low_or_reduced_calorie	"Fats, Oils, and Salad Dressings"	Salad dressings	Light salad dressings			done	0
+92560100	Gatorade_Thirst_Quencher_sports_drink	"Sugars, Sweets, and Beverages"	Formulated_nutrition_beverages_energy_drinks_sports_drinks_function		Sports_drinks		Use 2016 FoodCode _95320200 (_Gatorade Thirst Quencher sports drink)	1
+92650200	Monster_Energy_Drink	"Sugars, Sweets, and Beverages"	Formulated_nutrition_beverages_energy_drinks_sports_drinks_function		Energy_drinks		Use 2016 FoodCode _95310400 (Monster Energy Drink)	1
+94000000	Water_as_an_ingredient	"Sugars, Sweets, and Beverages"	"Water, noncarbonated"	"Water, not bottled"			done	0
