@@ -1,0 +1,111 @@
+---
+title: "04_get_abundance"
+---
+
+  1. Remove recalls failing the data QC done by Joanne  – this will exclude incomplete recalls but may keep subjects with kcal consumption nearly below or above the 5-95th percentiles (but still plausible)  
+  2. Keep subjects consuming protein powders, cocoa powder, instant breakfast powders (i.e. the problem foods for the lactose estimation)  
+  3. Keep only the subjects with at least 2 usable at-home recalls  
+  4. Report abundance (grams) for each food as the average of the total n or recalls (2 or 3) per person  
+
+import the items files 
+```{r}
+r14<- read.csv("../data/raw_input/INFMYPHEI_JA_Corrections.csv", header=T)
+r16<- read.csv("../data/raw_input/Items_JACorrections.csv", header=T)
+
+dim(r14)
+dim(r16)
+```
+import the totals files, which have the data qc columns:  
+```{r}
+r2<- read.csv("../data/raw_input/CTSC24532USDAWHNRCNu-ASA241_DATA_2020-01-02_1128.csv", header=T)
+r3<- read.csv("../data/raw_input/CTSC24532USDAWHNRCNu-ASA242_DATA_2020-01-02_1128.csv", header=T)
+r4<- read.csv("../data/raw_input/CTSC24532USDAWHNRCNu-ASA243_DATA_2020-01-02_1129.csv", header=T)
+```
+
+
+we can't rbind the items files  because there are different ncol. select just the nutrient columns (no HEI columns) and then rbind  
+```{r}
+require(gplots)
+require(dplyr)
+#find overlapping columns 
+asa<- venn(list("2014" = colnames(r14), "2016" = colnames(r16)))
+cols1<- attr(asa, "intersections")$'2014:2016' 
+#get the matching columns
+r14.tmp<- r14[,cols1] 
+r16.tmp<- r16[,cols1]
+#put into one df and remove HEI columns and remove the training recall 
+recalls<- rbind(r14.tmp,r16.tmp) %>% filter(RecallNo != 1)
+#clean up the subject ID 
+recalls$UserName<- gsub("[^0-9]", "", recalls$UserName)
+```
+
+Get the subjects passing QC 
+```{r}
+r2.ok<- r2 %>% filter(recallqc_passed_2 == 1) 
+r3.ok<- r3 %>% filter(recallqc_passed_3 == 1) 
+r4.ok<- r4 %>% filter(recallqc_passed_4 == 1)
+```
+
+
+Now get the items in the usable recalls  
+```{r}
+r2.use<- recalls %>% filter(RecallNo==2) %>% filter(UserName %in% r2.ok$subject_id)
+r3.use<- recalls %>% filter(RecallNo==3) %>% filter(UserName %in% r3.ok$subject_id)
+r4.use<- recalls %>% filter(RecallNo==4) %>% filter(UserName %in% r4.ok$subject_id)
+
+#double check this is right
+length(unique(r2.use$UserName)) #352
+length(unique(r2.ok$subject_id)) #352
+length(unique(r3.use$UserName)) #350
+length(unique(r3.ok$subject_id)) #350
+length(unique(r4.use$UserName)) #327
+length(unique(r4.ok$subject_id)) #327
+#looks good, rbind
+recalls.qc<- rbind(r2.use, r3.use, r4.use)
+```
+
+Get subjects with at least 2 at home recalls 
+```{r}
+recalls.tmp<- unique(recalls.qc[,c("UserName", "RecallNo")])
+athome<- plyr::count(recalls.tmp, "UserName") %>% filter(freq >=2) #350 subjects
+#now get those subjects' items 
+recalls.use<- recalls.qc %>% filter(UserName %in% athome$UserName)
+#check
+length(unique(recalls.use$UserName)) #350
+venn(list(unique(recalls.use$UserName), unique(athome$UserName)))
+venn(list("r2" = unique (r2.ok$subject_id),  #326 + 1 + 23 = 350 yay
+          "r3" = unique(r3.ok$subject_id),
+          "r4" = unique(r4.ok$subject_id)))
+```
+
+`recalls.use` contains all the items for the subjects we can use for analysis   
+we now need to average the g of food over the total n of recalls per subject   
+
+some examples to check:   
+
+5001 ate 100.5 of FoodCode 22311000 in Recall 2  
+5001 has 3 at home recalls, so the average of 22311000 is 100.5/3 = 33.5  
+
+6018 consumed 11100000 twice (recalls 3 and 4), each at 61 g for a grand total of 122
+6018 has 3 at home recalls, so the average is 122/3 = 40.67
+
+
+```{r}
+# sum total grams of each food eaten within a record
+otu.total <- aggregate(FoodAmt ~ UserName +FoodCode, data=recalls.use,FUN="sum")
+#now we have to merge it with the frequency or else aggregate won't divide by the total n of recalls (since not all foods appear in every recall) 
+otu.freq<- merge(otu.total, athome, by = "UserName")
+otu.freq$avg <- otu.freq$FoodAmt/otu.freq$freq
+```
+
+reshape 
+```{r}
+otu <- otu.freq %>% select(UserName, FoodCode, avg)
+otu.w <- reshape(otu, timevar = "FoodCode", idvar = "UserName", direction = "wide")
+otu.w[is.na(otu.w)] <- 0
+rownames(otu.w) <- otu.w[,1] # make subjectID the rownames
+otu.w <- otu.w[,-1]    
+colnames(otu.w) <- gsub("avg.", "", colnames(otu.w)) #rename column names to FoodCodes only
+t.otu.w <- t(otu.w)#transpose
+```
+
