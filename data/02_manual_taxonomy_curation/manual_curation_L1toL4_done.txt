@@ -33,14 +33,14 @@ FoodCode	Food_Description	L1	L2	L3	L4	L5	Note	Use2016
 32105130	Egg_omelet_or_scrambled_egg_with_onions_peppers_tomatoes_and_mushrooms_W_VEGETABLE_OIL_NFS_INCLUDE_OIL_NFS	Eggs	Egg mixtures	Egg dishes made with whole eggs	Egg_omelet_or_scrambled		done	0
 41430000	Protein_powder_NFS						Use 2016 FoodCode _95230030 (Protein_powder_NFS)	1
 41430010	Protein_supplement_powdered						Use 2016 FoodCode _95230030 (Protein_powder_NFS)	1
-41430310	Protein_diet_powder_with_soy_and_casein	Sugars_Sweets_and_Beverages	Formulated_nutrition_beverages_energy_drinks_sports_drinks_function	Nutrition_powders			"No comparable 2016 FoodCode, modified taxa levels"	0
-41435110	High_protein_bar_candy_like_soy_and_milk_base	Grain Product	"Cakes, cookies, pies, pastries, bars"	Bars	Nutrition_bars_protein_energy_meal		"No comparable 2016 FoodCode, modified taxa levels"	0
+41430310	Protein_diet_powder_with_soy_and_casein	Sugars_Sweets_and_Beverages	Formulated_nutrition_beverages_energy_drinks_sports_drinks_function	Nutrition_powders			"No comparable 2016 FoodCode, modified taxa levels"	
+41435110	High_protein_bar_candy_like_soy_and_milk_base	Grain Product	"Cakes, cookies, pies, pastries, bars"	Bars	Nutrition_bars_protein_energy_meal		"No comparable 2016 FoodCode, modified taxa levels"	
 41435500	Clif_Bar						Use 2016 FoodCode _53720200 (Clif Bar)	1
 41440010	Meal_replacement_or_supplement_liquid_soy_base_high_protein						Use 2016 FoodCode_ _95120010 (Nutritional drink or meal replacement high protein ready to drink NFS)	1
 41601170	Bean_and_rice_soup						done	0
 51121040	Bread_garlic_toasted	Grain Product	Yeast	"White breads, rolls"	Bread_with_additions	Bread_garlic_or_onion	done	0
 53105260	Cake_chocolate_devils_food_or_fudge_with_icing_coating_or_filling_made_from_home_recipe_or_purchased_ready_to_eat	Grain Product	"Cakes, cookies, pies, pastries, bars"	Cakes	Cakes	Cake_chocolate	done	0
-53115600	Cake_poppyseed_without_icing	Grain Product	"Cakes, cookies, pies, pastries, bars"	Cakes	Cakes	Cake_pound_pumpkin_raisin_nut	No premade logical L5; no empty L5s for L4==cake	0
+53115600	Cake_poppyseed_without_icing	Grain Product	"Cakes, cookies, pies, pastries, bars"	Cakes	Cakes	_Cake_pound_pumpkin_raisin_nut	No premade logical L5; no empty L5s for L4==cake	0
 53120260	Cake_white_with_icing_made_from_home_recipe_or_purchased_ready_to_eat	Grain Product	"Cakes, cookies, pies, pastries, bars"	Cakes	Cakes	Cake_white	done	0
 53121200	Cake_yellow_standard_type_mix_eggs_and_water_added_to_dry_mix_with_icing	Grain Product	"Cakes, cookies, pies, pastries, bars"	Cakes	Cakes	Cake_yellow	done	0
 53121260	Cake_yellow_with_icing_made_from_home_recipe_or_purchased_ready_to_eat	Grain Product	"Cakes, cookies, pies, pastries, bars"	Cakes	Cakes	Cake_yellow	done	0
@@ -77,7 +77,7 @@ FoodCode	Food_Description	L1	L2	L3	L4	L5	Note	Use2016
 58161110	Rice_casserole_with_cheese	Grain Product	"Grain mixtures, frozen plate meals, soups"	"Mixtures, mainly grain, pasta, or bread"	"Mixtures, mainly grain, pasta, or bread"	Mixed_rice_dishes	done	0
 58161300	White_rice_with_tomato_sauce	Grain Product	"Grain mixtures, frozen plate meals, soups"	"Mixtures, mainly grain, pasta, or bread"	"Mixtures, mainly grain, pasta, or bread"	Rice_with_vegetables_or_lentils	Use 2016 FoodCode _58160520 (_Rice white with tomatoes andor tomato based sauce NS as to fat added in cooking)	1
 58161310	Rice_brown_with_tomato_sauce	Grain Product	"Grain mixtures, frozen plate meals, soups"	"Mixtures, mainly grain, pasta, or bread"	"Mixtures, mainly grain, pasta, or bread"	Rice_with_vegetables_or_lentils	Use 2016 FoodCode _58161460 (_Rice brown with tomatoes andor tomato based sauce NS as to fat added in cooking)	1
-71201010	White_potato_chips	Vegetables	White potatoes and Puerto Rican starchy vegetables	"White potatoes, chips and sticks"	"White potatoes, chips and sticks"	White_potato_chips	Use 2016 FoodCode _71201015 (_White potato chips regular cut)	1
+71201010	White_potato_chips	Vegetables	White potatoes and Puerto Rican starchy vegetables	"White potatoes, chips and sticks"	"White potatoes, chips and sticks"	White_potato_chips	"Use 2016 FoodCode _71201015	(_White potato chips regular cut)"	1
 74402310	Green_tomato_chile_sauce_raw_Salsa_de_tomate_verde_cruda	Vegetables	Tomatoes and tomato mixtures	Tomato sauces	Tomato sauces		done	0
 74403010	Tomato_sauce	Vegetables	Tomatoes and tomato mixtures	Tomato sauces	Tomato sauces		done	0
 83105100	Fruit_dressing_made_with_honey_oil_and_water	"Fats, Oils, and Salad Dressings"	Salad dressings	Regular salad dressings			done	0
