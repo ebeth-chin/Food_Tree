@@ -12,12 +12,23 @@ mct<- read.delim("../food_tree_gits/food_graphlan-master/data/mct.taxonomy.txt",
 dim(mct)
 
 #now load in the FL100 unique list of foods from ASA24-2016
-items<- read.delim("../data/00_formatted_foods/ITEMS_formatted.txt", sep="\t")
-dim(items)
+items<- read.delim("../data/00_formatted_foods/ITEMS_formatted.txt", sep="\t",
+                   colClasses = c("numeric", "factor")) 
+#note that the description for FoodCode: 27343470
+#was split into two rows, with the second half landing in the FoodCode column. I manually removed this in excel 
+#and re-saved the file. idk why it did this 
+
+dim(items) #2282
+length(unique(items$FoodCode)) #2202 #80 food codes are duplicated (checks out below)
 
 #load the ASA24-2014 foodcodes
 inf<- read.delim("../data/00_formatted_foods/INFMYPHEI_formatted.txt", sep="\t")
-dim(inf)
+dim(inf) #1167
+length(unique(inf$FoodCode)) #1116, 51 foodcodes are duplicated; checks out
+
+#how many unique foodcodes
+tmp<-rbind(inf, items)
+length(unique(tmp$FoodCode)) #2431
 ```
 
 clean up the food description columns
@@ -47,15 +58,15 @@ library(gplots)
 fc.venn<-venn(list("MCT" = mct$FoodID,  "Items" = items$FoodCode, "INF" = inf$FoodCode))
 #887 overlap 
 #141 INF + MCT only 
-#1313 Items + MCT only
+#1315 Items + MCT only
 #101 ASA24-2014 foods do not have taxonomy assigned yet
-#3 ASA24-2016 foods do not have taxonomy assigned yet 
+#all ASA24-2016 foods have taxonomy assigned 
 
 #get the foods that need to be manually curated
 inf.tmp<- data.frame(attr(fc.venn, "intersections")$'INF')
 inf.man<- inf %>% filter(FoodCode %in% inf.tmp[,1])
 items.tmp<-data.frame(attr(fc.venn, "intersections")$"Items")
-items.man<-items %>% filter(FoodCode %in% items.tmp[,1])
+#items.man<-items %>% filter(FoodCode %in% items.tmp[,1])
 
 venn(list("MCT" = trimws(mct$Main.food.description),  
           "Items" = trimws(items$Food_Description), 
@@ -74,13 +85,13 @@ abc<- merge(merge(mct, items, by.x = "FoodID", by.y = "FoodCode"), inf, by.x= "F
 length(unique(abc$FoodID)) #887
 '%nin%'<-Negate('%in%')
 ab<- merge(mct, items, by.x = "FoodID", by.y="FoodCode") %>% filter(FoodID %nin% inf$FoodCode)
-length(unique(ab$FoodID)) #1313 correct
+length(unique(ab$FoodID)) #1315 correct
 
 ac<- merge(mct,inf, by.x="FoodID", by.y="FoodCode") %>% filter(FoodID %nin% items$FoodCode)
 length(unique(ac$FoodID)) #141 correct
 
 #check
-venn(list(abc$FoodID, ac$FoodID, ab$FoodID))
+venn(list(unique(abc$FoodID), unique(ac$FoodID), unique(ab$FoodID)))
 ```
 
 find which foods don't have matching food descriptions
@@ -105,13 +116,15 @@ write.csv(subset(abc, check_all == 0), file="../data/01_find_overlap/check_mct_i
 save the foods that need to have taxonomy manually curated   
 ```{r eval=F}
 write.csv(inf.man, file="../data/01_find_overlap/foodcodes_manual_taxonomy_inf.csv", row.names=F)
-write.csv(items.man, file="../data/01_find_overlap/foodcodes_manual_taxonomy_items.csv", row.names=F)
+#write.csv(items.man, file="../data/01_find_overlap/foodcodes_manual_taxonomy_items.csv", row.names=F)
 ```
 
-safe the duplicated foods
+save the duplicated foods (these aren't in the final list for practice taxonomy (below))
 ```{r}
-write.csv(inf.dup, file="../data/01_find_overlap/duplicated_inf.csv", row.names=F)
-write.csv(items.dup, file="../data/01_find_overlap/duplicated_items", row.names=F)
+#first rbind 
+all.dups<- rbind(inf.dup, items.dup) %>% unique()
+all.dups<- all.dups[order(all.dups$FoodCode),] #191 
+write.csv(all.dups, "../data/01_find_overlap/duplicated_foods.csv", row.names=F)
 ```
 
 
@@ -144,6 +157,8 @@ write.table(foods2[,2], file="../data/01_find_overlap/fl100_food_taxonomy_PRACTI
 
 write the list with the foodcodes to help with manual curation and checking the duplicates  
 ```{r}
-write.csv(foods2, file="../data/01_find_overlap/fl100_food_taxonomy_and_FoodCodes.csv", row.names=F )
+write.csv(foods2, file="../data/01_find_overlap/fl100_practice_taxonomy_and_FoodCodes.csv", row.names=F )
 ```
+
+
 

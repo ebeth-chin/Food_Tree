@@ -1,0 +1,28 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+items<-read.csv("/Users/elizabeth.chin/Desktop/milk/FL100_ASA24_lactose_estimation/data/outputs/ITEMS_unique.csv", header=T)
+
+library(dplyr)
+library(stringr)
+dairy<- items %>% filter(str_detect(FoodCode, "^1")) 
+#remove 11100000	Milk, almond, ready-to-drink 
+
+dairy<- dairy[-102,]
+length(unique(dairy$FoodCode)) #there's another duplicate
+whats.dup<-dairy[duplicated(dairy$FoodCode)|duplicated(dairy$FoodCode, fromLast=TRUE),]
+#13210110	Pudding, bread W/ WHOLE MILK or without whole milk
+```
+
+```{r}
+clusters <- hclust(dist(dairy[, 4:68]))
+plot(clusters)
+
+clusterCut <- data.frame(cutree(clusters, 10))
+
+dairy2<-cbind(clusterCut, dairy)
+```
+
