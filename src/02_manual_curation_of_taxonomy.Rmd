@@ -233,9 +233,7 @@ dim(tax.all) #2406
 #25 foodcodes from 2014 were excluded so they will be collapsed into 2016 foodcodes
 #2406 + 25 = 2431, correct 
 
-write.table(tax.all[,2], "../data/02_manual_taxonomy_curation/FL100_final_taxonomy.txt", sep="\t", row.names = F, quote=F) #remember this isn't newick friendly
-write.table(tax.all, "../data/02_manual_taxonomy_curation/FL100_final_taxonomy_foodcodes.txt", sep="\t", row.names = F, quote=F) #with the foodcodes
-write.table(df16, "../data/02_manual_taxonomy_curation/foodcodes2014_convert_to_16.txt", sep="\t", row.names=F, quote=F) #2014 foods to collapse into 2016 foods
+write.table(tax.all, "../data/02_manual_taxonomy_curation/FL100_final_taxonomy.txt", sep="\t") #remember this isn't newick friendly
 ```
 
 

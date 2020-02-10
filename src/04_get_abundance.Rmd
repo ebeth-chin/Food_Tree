@@ -2,54 +2,18 @@
 title: "04_get_abundance"
 ---
 
-  1. collapse 2014 foodcodes into 2016 
-  2. Remove recalls failing the data QC done by Joanne  – this will exclude incomplete recalls but may keep subjects with kcal consumption nearly below or above the 5-95th percentiles (but still plausible)  
-  3. Keep subjects consuming protein powders, cocoa powder, instant breakfast powders (i.e. the problem foods for the lactose estimation)  
-  4. Keep only the subjects with at least 2 usable at-home recalls  
-  5. Report abundance (grams) for each food as the average of the total n or recalls (2 or 3) per person  
-
-# collapse 2014 food codes
-
-```{r}
-source("../lib/collapse_foodcodes.R")
-
-collapse.foodcodes(input_foods = "/Users/elizabeth.chin/Desktop/milk/Food_Tree/data/raw_input/INFMYPHEI_JA_Corrections.csv",
-                   foodcode_column = "FoodCode", 
-                   foodcode_list = "/Users/elizabeth.chin/Desktop/milk/Food_Tree/data/02_manual_taxonomy_curation/foodcodes2014_convert_to_16_input.csv",
-                   codes_2014 = "FoodCode.2014", 
-                   codes_2016 = "FoodCode.2016", 
-                   output_foods = "/Users/elizabeth.chin/Desktop/milk/Food_Tree/data/04_get_abundance/inmyphei_collapsed_foodcodes.csv")
-
-```
-
-# fix any duplicates
-```{r}
-source("../lib/jitter.duplicate.foodcodes.R")
-
-jitter.duplicate.foodcodes(items= "../data/raw_input/Items_JACorrections.csv",
-                           foodcode_col = "FoodCode", 
-                           duplicated_codes="../data/02_manual_taxonomy_curation/foodcodes_duplicated_with_jitter.txt",
-                          dupecodes_col = "FoodCode",
-                          jittercode_col = "FoodCode.jitter",
-                          outfile= "/Users/elizabeth.chin/Desktop/milk/Food_Tree/data/04_get_abundance/items_duplicates_fixed.csv")
-
-
-jitter.duplicate.foodcodes(items= "../data/04_get_abundance/inmyphei_collapsed_foodcodes.csv",
-                           foodcode_col = "FoodCode", 
-                           duplicated_codes="../data/02_manual_taxonomy_curation/foodcodes_duplicated_with_jitter.txt",
-                          dupecodes_col = "FoodCode",
-                          jittercode_col = "FoodCode.jitter",
-                          outfile= "/Users/elizabeth.chin/Desktop/milk/Food_Tree/data/04_get_abundance/inmyphei_duplicates_fixed.csv")
-```
-
+  1. Remove recalls failing the data QC done by Joanne  – this will exclude incomplete recalls but may keep subjects with kcal consumption nearly below or above the 5-95th percentiles (but still plausible)  
+  2. Keep subjects consuming protein powders, cocoa powder, instant breakfast powders (i.e. the problem foods for the lactose estimation)  
+  3. Keep only the subjects with at least 2 usable at-home recalls  
+  4. Report abundance (grams) for each food as the average of the total n or recalls (2 or 3) per person  
 
 import the items files 
 ```{r}
-tmp14<- read.csv("../data/raw_input/INFMYPHEI_JA_Corrections.csv", header=T) #original has 5387 rows
-tmp16<- read.csv("../data/raw_input/Items_JACorrections.csv", header=T) #original has 22391 rows
+r14<- read.csv("../data/raw_input/INFMYPHEI_JA_Corrections.csv", header=T)
+r16<- read.csv("../data/raw_input/Items_JACorrections.csv", header=T)
 
-r14<- read.csv("../data/04_get_abundance/inmyphei_duplicates_fixed.csv", header=T) #also has 5387 rows
-r16<- read.csv("../data/04_get_abundance/items_duplicates_fixed.csv", header=T) #22391 rows 
+dim(r14)
+dim(r16)
 ```
 import the totals files, which have the data qc columns:  
 ```{r}
@@ -64,17 +28,16 @@ we can't rbind the items files  because there are different ncol. select just th
 require(gplots)
 require(dplyr)
 #find overlapping columns 
-asa<- venn(list("2014" = colnames(r14), "2016" = colnames(r16))) #103 columns overlap
+asa<- venn(list("2014" = colnames(r14), "2016" = colnames(r16)))
 cols1<- attr(asa, "intersections")$'2014:2016' 
 #get the matching columns
 r14.tmp<- r14[,cols1] 
 r16.tmp<- r16[,cols1]
-#put into one df and remove the training recall 
+#put into one df and remove HEI columns and remove the training recall 
 recalls<- rbind(r14.tmp,r16.tmp) %>% filter(RecallNo != 1)
 #clean up the subject ID 
 recalls$UserName<- gsub("[^0-9]", "", recalls$UserName)
 ```
-
 
 Get the subjects passing QC 
 ```{r}
@@ -144,17 +107,5 @@ rownames(otu.w) <- otu.w[,1] # make subjectID the rownames
 otu.w <- otu.w[,-1]    
 colnames(otu.w) <- gsub("avg.", "", colnames(otu.w)) #rename column names to FoodCodes only
 t.otu.w <- t(otu.w)#transpose
-```
-
-
-```{r}
-food.taxonomy <- read.table("../data/02_manual_taxonomy_curation/FL100_final_taxonomy_foodcodes.txt", sep="\t", colClasses="character", quote="", header=T)
-    
-    food.otu <- merge(t.otu.w, food.taxonomy, by=0)
-    
-    # let's get rid of the FoodIDs and replace it with the food tree leaf names
-    rownames(food.otu) <- food.otu[,"Main.food.description"]
-    remove.col.ix <- which(colnames(food.otu) %in% c("Main.food.description", "Row.names"))
-    food.otu <- food.otu[,-remove.col.ix]
 ```
 
