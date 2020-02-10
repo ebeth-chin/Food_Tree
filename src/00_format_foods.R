@@ -2,6 +2,10 @@
 
 source("lib/format_input_files.R")
 
+#convert the unique items to txt 
+items<-read.csv("/Users/elizabeth.chin/Desktop/milk/FL100_ASA24_lactose_estimation/data/outputs/Items_unique.csv", header = T) #2282 foods
+items.txt<- write.table(items, "/Users/elizabeth.chin/Desktop/milk/FL100_ASA24_lactose_estimation/data/outputs/Items_unique.txt", sep="\t", row.names=F)
+
 #ASA24-2016 foods
 format.file(filename="/Users/elizabeth.chin/Desktop/milk/FL100_ASA24_lactose_estimation/data/outputs/Items_unique.txt",
             foodcodecolname = "FoodCode",
