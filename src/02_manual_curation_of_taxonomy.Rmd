@@ -122,7 +122,10 @@ These are the only two duplicate foodcodes:
 2340            L1_Sugars_Sweets_and_Beverages.L2_Nonalcoholic_beverages.L3_Coffee.L4_Coffee.L5_Coffee_from_ground.Coffee_latte
 2341 L1_Sugars_Sweets_and_Beverages.L2_Nonalcoholic_beverages.L3_Coffee.L4_Coffee.L5_Coffee_from_ground.Coffee_latte_W_SOY_MILK
 
-##################################
+##################################   
+# note 02/10/2020   
+turns out the steps to manually update the taxonomy levels was unnecessary at this point, but it was helpful to see that some 2014 foods had a 2016 counterpart with a different foodcode, and that some 2014 foodcodes did not follow a logical taxonomy convention (i.e. the protein bar and protein powder/shake)   
+
 For the Unique Food Codes: 
 
 add known taxonomy levels
@@ -139,7 +142,8 @@ mct<- separate(mct, "taxonomy", into= c("L1", "L2", "L3", "L4", "L5"),
                sep=";", remove=T)
 ```
 
-now search the taxonomy file for inspiration and add them in excel  
+now search the taxonomy file for inspiration and add them in excel    
+
 ```{r}
 library(dplyr)
 library(stringr)
