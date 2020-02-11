@@ -100,3 +100,8 @@ diet.input<- diet %>% filter(Food_Description != "") %>% #no blank food descript
     .[!duplicated(.$FoodCode),] %>% #no duplicated foodcodes- 2413 (FoodCode == 9 is excluded, which only occurs due to system/reporting errors)
   dplyr::select(FoodCode, Food_Description) #just get relevant columns
 
+################################
+# save file for graphlan input #
+################################
+
+write.table()
