@@ -47,9 +47,9 @@ library(gplots)
 fc.venn<-venn(list("MCT" = mct$FoodID,  "Items" = items$FoodCode, "INF" = inf$FoodCode))
 #887 overlap 
 #141 INF + MCT only 
-#1313 Items + MCT only
+#1315 Items + MCT only
 #101 ASA24-2014 foods do not have taxonomy assigned yet
-#3 ASA24-2016 foods do not have taxonomy assigned yet 
+#0 ASA24-2016 foods do not have taxonomy assigned yet 
 
 #get the foods that need to be manually curated
 inf.tmp<- data.frame(attr(fc.venn, "intersections")$'INF')
