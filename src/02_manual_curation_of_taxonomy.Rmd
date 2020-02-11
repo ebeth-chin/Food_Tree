@@ -40,7 +40,7 @@ check out your data
 dim(inf.man) #101 foods
 dim(all.dupes) #191 foods total
 
-dim(mct) #1453 foods
+dim(mct) #8767 foods
 dim(tax) #2343 
 length(unique(tax$FoodID)) 
 
@@ -128,7 +128,7 @@ For the Unique Food Codes:
 add known taxonomy levels
 ```{r}
 source("../lib/create.taxonomy.R")
-create.taxonomy(foods=man4, outdir="../data/02_manual_taxonomy_curation/manual_curation_L1toL4.txt")
+#create.taxonomy(foods=man4, outdir="../data/02_manual_taxonomy_curation/manual_curation_L1toL4.txt")
 ```
 
 search the MCT file to help get ideas for L4s: 
