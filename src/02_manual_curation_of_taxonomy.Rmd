@@ -202,39 +202,3 @@ View(to.add)
 ```
 
 
-separate into foods that can use the 2016 FoodCode and foods that are truly unique 
-
-```{r}
-#remove foodcode == 9 & keep truly unique foods --> these ones will be added to the final FL100 taxa list
-df<- to.add %>% filter(FoodCode != 9) %>% filter(Use2016 != 1) 
-
-#foods that can use the 2016 foodcode. save this for later, because we'll have to reassign the OTU/food amounts to these foodcodes!!These ones don't get added to the final FL100 taxa list
-df16<- to.add %>% filter(Use2016 == 1) #25 foods
-```
-
-collapse the taxa levels into one column
-```{r}
-df$taxonomy<- paste0("L1_", df$L1,".",
-                     "L2_", df$L2,".",
-                     "L3_", df$L3,".",
-                     "L4_", df$L4,".",
-                     "L5_", df$L5,".",
-                     df$Food_Description)
-
-df.add<- df %>% dplyr::select(FoodCode, taxonomy)
-colnames(df.add)[1]<- "FoodID"
-```
-
-Now add these unique foods back to the taxonomy list  
-```{r}
-tax.all<-rbind(tax, df.add)
-dim(tax.all) #2406
-#there are 2431 unique food codes in asa24 2016 and 2014
-#25 foodcodes from 2014 were excluded so they will be collapsed into 2016 foodcodes
-#2406 + 25 = 2431, correct 
-
-write.table(tax.all, "../data/02_manual_taxonomy_curation/FL100_final_taxonomy.txt", sep="\t") #remember this isn't newick friendly
-```
-
-
-
