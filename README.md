@@ -9,5 +9,6 @@ purpose: make 'phylogenetic' food tree for ASA24 foods, similar to [Johnson et a
 --or--   
 
 Use the .yml file in this repository:   
-conda env create -f graphlan.yml
+
+`conda env create -f graphlan.yml`  
 
