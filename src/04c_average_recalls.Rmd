@@ -1,0 +1,9 @@
+---
+title: "04c_average_recalls"
+---
+
+purpose: to average the food amounts over 2 or 3 recalls   
+
+Previous QC'ing of recalls included:  
+  * Recalls were excluded if they failed QC  
+  * Subjects were excluded if they had fewer than 2 at-home recalls   
