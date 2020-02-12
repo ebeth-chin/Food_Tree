@@ -8,27 +8,6 @@ required files:
 1. nodes_fn == taxonomy, defined by FNDDS code (not per food, the general rules). Will use Knight lab file.   
 2. food_database_fn == contains ASA24 FoodCodes and Food Descriptions   
 
-```{r}
-library(dplyr)
-library(stringr)
-foods<- read.delim("../data/02_manual_taxonomy_curation/FL100_final_taxonomy_foodcodes.txt", header=T, sep="\t")
-```
-
-This file contains the 2406 foods to be used to build the food tree. These foods include foods from asa24-2014 and 2016 users, but there is no information in the file regarding which year the food came from.   
-
-Get the food description with separate and select   
-```{r}
-foods<- separate(foods, "taxonomy", into=c("L1", "L2", "L3", "L4", "L5", "Main.food.description"), 
-                 sep="\\.", remove=F)
-View(foods)
-```
-
-```{r}
-for.newick<- foods %>% dplyr::select(FoodID, Main.food.description) #the column names of the input must be this! 
-
-write.table(for.newick, "../data/03_make_newick_tree/fl100_foods_for_newick.txt", sep="\t", quote = F, row.names=F)
-```
-
 # make tree
 
 ```{r}
@@ -38,7 +17,7 @@ source("../food_tree_gits/Food_Tree-master/R/lib/newick.tree.r")
 
 ```{r}
 make.food.tree(nodes="../food_tree_gits/Food_Tree-master/R/data/NodeLabelsMCT.txt",
-               food_database_fn = "../data/03_make_newick_tree/fl100_foods_for_newick.txt", 
+               food_database_fn = "../data/03_make_newick_tree//fl100_final_foods.txt", 
                output_tree_fn = "../data/03_make_newick_tree/fl100_newick_tree.txt", 
                output_taxonomy_fn = "../data/03_make_newick_tree/fl100_newick_taxonomy.txt")
 ```
