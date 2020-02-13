@@ -1,6 +1,9 @@
-
-#to add first three levels to taxonomy based on FNDDS foodcode and coding scheme developed by Knight lab
+#Author: Elizabeth L. Chin
+#Purpose: to add first three levels to taxonomy based on FNDDS foodcode and coding scheme developed by Knight lab
 #knight lab coding scheme: /Food_Tree-master/raw_data/coding.scheme.txt
+#note 02/10/2020- this file isn't truly needed to make the newick tree-- this step is already embedded in make.food.tree.r
+#which I didn't realize until later... it was still helpful to see which ASA24-2014 FoodCodes might not belong to the expected food group
+
 create.taxonomy<-function(foods, outdir){
   #create columns for L1-L5
   L1<- array(dim=nrow(foods))
