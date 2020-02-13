@@ -1,0 +1,13 @@
+FoodCode	Food_Description	FoodCode.jitter
+32105010	"Egg omelet or scrambled egg, with cheese W/O FAT OR W/ NONSTICK SPRAY (INCLUDE PAM...)"	32105010
+32105010	"Egg omelet or scrambled egg, with cheese W/ VEGETABLE OIL, NFS (INCLUDE OIL, NFS)"	32105010
+32105010	"Egg omelet or scrambled egg, with ham or bacon and cheese"	32105010.1
+92101900	"Coffee, Latte"	92101900
+92101900	"Coffee, latte W/ 1% MILK"	92101900
+92101900	"Coffee, latte W/ 2% MILK"	92101900
+92101900	"Coffee, latte W/ SKIM MILK"	92101900
+92101900	"Coffee, latte W/ WHOLE MILK"	92101900
+92101900	"Coffee, latte"	92101900
+92101900	"Coffee, latte W/ SOY MILK"	92101900.1
+11100000	"Milk, NFS"	11100000
+11100000	"Milk, almond, ready-to-drink"	11350000
