@@ -1,9 +1,9 @@
 ---
 title: "01_find_overlap"
 ---
-
-Step: 01    
-Purpose: find overlapping FoodCodes that overlap with what is available in Knight Lab's Food Tree git   
+Purpose: find overlapping FoodCodes that overlap with what is available in Knight Lab's Food Tree git    
+- we want to find out which foods may need to be manually curated/checked out, this mainly pertains to foods reported in ASA24-2014, which used a much older version of FNDDS.   
+- we want to see what's overlapping with the Knight lab foods because there may be some foods only reported by 2014, but also exist in 2016, but just so happen to not be reported by FL100 ASA24-2016 users.     
 
 ```{r setup}
 library(dplyr)
