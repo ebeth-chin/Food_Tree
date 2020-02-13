@@ -114,34 +114,6 @@ write.csv(inf.dup, file="../data/01_find_overlap/duplicated_inf.csv", row.names=
 write.csv(items.dup, file="../data/01_find_overlap/duplicated_items", row.names=F)
 ```
 
-
-######### WIP ########## 
-
-for the purpose of troubleshooting and making our first food tree, let's assume that the taxonomy for the overlapping foodcodes are ok and nothing needs to be checked (NOTE THIS IS WRONG BECAUSE WE NEED TO CLOSELY CHECK DUPLICATED FOODCODES E.G. Cappucchino with SOY vs Cappucchino with WHOLE MILK (same foodcode):   
-
-rbind the three data sets of foocodes   
-```{r}
-#rbind the foods unique to items or inf, retain only the foodid and taxonomy
-foods1<- rbind(ab, ac) %>% select(FoodID, taxonomy)
-
-#retain only the foodid and taxonomy for the trifecta foods
-tri<- abc %>% select(FoodID, taxonomy)
-
-#rbind to the first set of foods and uniquify 
-foods2<- rbind(foods1, tri) %>% unique()
-```
-
-replace the ; with . to make it graphlan-friendly
-```{r}
-foods2$taxonomy<- gsub(";", ".", foods2$taxonomy)
-```
-
-write this list to use as input into graphlan 
-```{r eval=F}
-write.table(foods2[,2], file="../data/01_find_overlap/fl100_food_taxonomy_PRACTICE.txt", 
-            sep="\t", row.names = F, quote=F)
-```
-
 write the list with the foodcodes to help with manual curation and checking the duplicates  
 ```{r}
 write.csv(foods2, file="../data/01_find_overlap/fl100_food_taxonomy_and_FoodCodes.csv", row.names=F )
