@@ -16,7 +16,7 @@ source("../food_tree_gits/Food_Tree-master/R/lib/newick.tree.r")
 ```
 
 ```{r}
-make.food.tree(nodes="../food_tree_gits/Food_Tree-master/R/data/NodeLabelsMCT.txt",
+make.food.tree(nodes="../data/03_make_newick_tree/NodeLabelsMCT.txt",
                food_database_fn = "../data/03_make_newick_tree//fl100_final_foods.txt", 
                output_tree_fn = "../data/03_make_newick_tree/fl100_newick_tree.txt", 
                output_taxonomy_fn = "../data/03_make_newick_tree/fl100_newick_taxonomy.txt")

@@ -1,4 +1,3 @@
-#original author: Abigail Johnson, https://github.com/abbycole/food_graphlan
 total_plotted_degrees	355
 start_rotation	270
 annotation_background_alpha	0.25
