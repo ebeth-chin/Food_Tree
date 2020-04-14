@@ -1,0 +1,24 @@
+---
+title: "03_make_newick_tree_allfoods"
+---
+
+# prepare files to make the newick tree-- this is a newick tree for **all** foods reported by FL100 subjects, regardless of whether it came from a recall that passed QC (04a_qc_recalls.Rmd)
+
+required files: 
+1. nodes_fn == taxonomy, defined by FNDDS code (not per food, the general rules). Will use Knight lab file.   
+2. food_database_fn == contains ASA24 FoodCodes and Food Descriptions   
+
+# make tree
+
+```{r}
+source("../lib/make.food.tree.r")
+source("../food_tree_gits/Food_Tree-master/R/lib/newick.tree.r")
+```
+
+```{r}
+make.food.tree(nodes="../data/03_make_newick_tree_all_foods/NodeLabelsMCT.txt",
+               food_database_fn = "../data/03_make_newick_tree_all_foods/fl100_final_foods.txt", 
+               output_tree_fn = "../data/03_make_newick_tree_all_foods/fl100_newick_tree_all_foods.txt", 
+               output_taxonomy_fn = "../data/03_make_newick_tree_all_foods/fl100_newick_taxonomy_all_foods.txt")
+```
+
