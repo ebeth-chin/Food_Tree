@@ -54,7 +54,7 @@ source("../lib/make.food.otu.R")
 
 make.food.otu(food_records_fn = "../data/04_get_abundance/recalls_average_g.txt" ,
               food_record_id = "UserName", 
-              food_taxonomy_fn= "../data/03_make_newick_tree/fl100_newick_taxonomy.txt", 
+              food_taxonomy_fn= "../data/03_make_newick_tree_all_foods/fl100_newick_taxonomy_all_foods.txt", 
               output_fn="../data/04_get_abundance/fl100_otu_abundance.txt")
 
 ```
