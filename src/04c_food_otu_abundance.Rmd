@@ -8,9 +8,6 @@ Previous QC'ing of recalls included:
   * Recalls were excluded if they failed QC  
   * Subjects were excluded if they had fewer than 2 at-home recalls   
 
-
-  
-
 some examples to check:   
 
 5001 ate 100.5 of FoodCode 22311000 in Recall 2  
@@ -38,7 +35,7 @@ otu.freq$avg <- otu.freq$FoodAmt/otu.freq$freq
 ```{r}
 otu.save<- otu.freq %>% select(UserName, FoodCode, avg)
 colnames(otu.save)<-c("UserName", "FoodCode", "FoodAmt") #the 'avg' column needs to be named "FoodAmt" for the below function
-write.table(otu.save, "../data/04_get_abundance/recalls_average_g.txt", sep="\t", row.names=F, quote=F)
+#write.table(otu.save, "../data/04_get_abundance/recalls_average_g.txt", sep="\t", row.names=F, quote=F)
 ```
 
 ```{r}

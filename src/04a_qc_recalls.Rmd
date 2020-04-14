@@ -80,7 +80,6 @@ venn(list("r2" = unique (r2.ok$subject_id),  #326 + 1 + 23 = 350 yay
 
 write the file
 ```{r}
-write.csv(recalls.use, "../data/04_get_abundance/fl100_recalls_qcd.csv", row.names=F)
+#write.csv(recalls.use, "../data/04_get_abundance/fl100_recalls_qcd.csv", row.names=F)
 ```
-
 

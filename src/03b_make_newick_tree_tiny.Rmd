@@ -1,0 +1,75 @@
+---
+title: "03b_make_newick_tree_tiny"
+---
+
+
+Purpose: Make small newick tree of 50 foods to help MK troubleshoot opening newick tree (03/16/2020- currently not sure if the issue is that the newick file is massive or something else?)  
+
+# prepare small list of foods (n = 50) to make the newick tree
+
+```{r}
+library(dplyr)
+library(stringr)
+set.seed(1234)
+```
+
+```{r}
+foods<- read.delim("../data/03_make_newick_tree/fl100_final_foods.txt", sep="\t")
+dim(foods) # 2413    2
+```
+
+Get n = 5-ish foods from each food group 
+
+separate food groups
+```{r}
+fg1<- foods %>% filter(str_detect(FoodID, regex("^1")))
+fg2<- foods %>% filter(str_detect(FoodID, regex("^2")))
+fg3<- foods %>% filter(str_detect(FoodID, regex("^3")))
+fg4<- foods %>% filter(str_detect(FoodID, regex("^4")))
+fg5<- foods %>% filter(str_detect(FoodID, regex("^5")))
+fg6<- foods %>% filter(str_detect(FoodID, regex("^6")))
+fg7<- foods %>% filter(str_detect(FoodID, regex("^7")))
+fg8<- foods %>% filter(str_detect(FoodID, regex("^8")))
+fg9<- foods %>% filter(str_detect(FoodID, regex("^9")))
+```
+
+get a random subset of 5 or 6 foods per food group
+
+```{r}
+fg1.5 <- sample_n(fg1, 6, replace=F)
+fg2.5 <- sample_n(fg2, 6, replace=F)
+fg3.5 <- sample_n(fg3, 6, replace=F)
+fg4.5 <- sample_n(fg4, 6, replace=F)
+fg5.5 <- sample_n(fg5, 6, replace=F)
+fg6.5 <- sample_n(fg6, 5, replace=F)
+fg7.5 <- sample_n(fg7, 5, replace=F)
+fg8.5 <- sample_n(fg8, 5, replace=F)
+fg9.5 <- sample_n(fg9, 5, replace=F)
+
+foods50<- rbind(fg1.5, fg2.5, fg3.5, fg4.5, fg5.5, fg6.5, fg7.5, fg8.5, fg9.5)
+
+#save it
+write.table(foods50, file = "../data/03_make_newick_tree/tiny_tree/fl100_tiny_foods_n50.txt", sep= "\t", quote=F)
+```
+
+# make tree
+
+
+required files: 
+1. nodes_fn == taxonomy, defined by FNDDS code (not per food, the general rules). Will use Knight lab file.   
+2. food_database_fn == contains ASA24 FoodCodes and Food Descriptions   
+
+
+```{r}
+source("../lib/make.food.tree.r")
+source("../food_tree_gits/Food_Tree-master/R/lib/newick.tree.r")
+```
+
+```{r}
+make.food.tree(nodes="../data/03_make_newick_tree/NodeLabelsMCT.txt",
+               food_database_fn = "../data/03_make_newick_tree/tiny_tree/fl100_tiny_foods_n50.txt", 
+               output_tree_fn = "../data/03_make_newick_tree/tiny_tree/fl100_newick_tree_tiny_n50.txt", 
+               output_taxonomy_fn = "../data/03_make_newick_tree/tiny_tree/fl100_newick_taxonomy_tiny_n50.txt")
+```
+
+

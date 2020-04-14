@@ -1,0 +1,34 @@
+---
+title: "05_make_newick_tree_recall_foods"
+---
+
+
+Get only the foodcodes/food descriptions for the foods reported by subjects passing recall qc (2 or 3 usable recalls):  
+
+We can do this by using the output of the recall QC step, which contains the SubjectID, FoodCode, and average FoodAmt but not food description (recalls_average_g.txt). We can import the final list of **all** FL100 FoodCodes, which contains the FoodCodes and Food Description (fl100_final_foods.txt), and is already formatted for input into the make.food.tree function.  
+We find the overlap of the two files, using the file structure of the FL100 FoodCodes file. This will be used as input for a new tree. 
+
+
+```{r}
+
+```
+
+
+required files: 
+1. nodes_fn == taxonomy, defined by FNDDS code (not per food, the general rules). Will use Knight lab file.   
+2. food_database_fn == contains ASA24 FoodCodes and Food Descriptions   
+
+# make tree
+
+```{r}
+source("../lib/make.food.tree.r")
+source("../food_tree_gits/Food_Tree-master/R/lib/newick.tree.r")
+```
+
+```{r}
+make.food.tree(nodes="../data/03_make_newick_tree/NodeLabelsMCT.txt",
+               food_database_fn = "../data/03_make_newick_tree/fl100_final_foods.txt", 
+               output_tree_fn = "../data/03_make_newick_tree/fl100_newick_tree.txt", 
+               output_taxonomy_fn = "../data/03_make_newick_tree/fl100_newick_taxonomy.txt")
+```
+
