@@ -73,7 +73,7 @@ collapse.foodcodes(input_foods = "/Users/elizabeth.chin/Desktop/milk/Food_Tree/d
 #check your work#
 #################
 diet<-read.csv("data/02_foodcode_curation/foods_collapsed.csv", header=T)
-length(unique(diet$FoodCode)) #2414 unique foodcodes, 4 of these have 0.1 added 
+length(unique(diet$FoodCode)) #2413 unique foodcodes, 4 of these have 0.1 added (you can't see it in R viewer pane, but it comes up if you search .1)
 
 library(gplots)
 fc.venn<- venn(list("merged" = unique(diet$FoodCode), 
@@ -82,11 +82,12 @@ fc.venn<- venn(list("merged" = unique(diet$FoodCode),
 attr(fc.venn, "intersections")$'merged'
 
 #2431 unique foodcodes reported in fl100, before cleanup
-#2414 unique foodcodes reported in fl100, after cleanup
-# 887 + 1315 + 202 + 27 = 2431 yay 
+#2413 unique foodcodes reported in fl100, after cleanup
+# 887 + 1315 + 201 + 28 = 2431 yay 
 # 10 of the foodcodes that are 'unique' to the merged dataset are foods with 0.1 added to the foodcode
 # or foodcodes that were in FL100 ASA24-2014 that were not reported by FL100 ASA24-2016 users, but were reported
 # in the MCT study (used ASA24-2016) which is why the foodcode got converted to a 2016 foodcode (I looked up the codes in the MCT file)
+# the 2016 foodcode was used when possible (sourced from FL100 ASA24-2016 users or the MCT FoodCodes) because the taxonomy was built using 2016 FNDDS
 
 
 #########################################################
@@ -98,11 +99,11 @@ attr(fc.venn, "intersections")$'merged'
 #see 02_manual_curation_of_foods and files for details about which foods are considered duplicate foodcodes w/ different foods based on the description
 diet$FoodCode<- trimws(diet$FoodCode)
 diet.input<- diet %>% filter(Food_Description != "") %>% #no blank food descriptions (from ASA24 system errors)
-    .[!duplicated(.$FoodCode),] %>% #no duplicated foodcodes- 2413 (FoodCode == 9 is excluded, which only occurs due to system/reporting errors)
+    .[!duplicated(.$FoodCode),] %>% #no duplicated foodcodes- 2412 (FoodCode == 9 is excluded, which only occurs due to system/reporting errors)
   dplyr::select(FoodCode, Food_Description) #just get relevant columns
 
 ################################
 # save file for graphlan input #
 ################################
 colnames(diet.input)<- c("FoodID", "Main.food.description") #this is what the function make.food.tree requires
-write.table(diet.input, file = "data/03_make_newick_tree/fl100_final_foods.txt", sep="\t",quote = F, row.names=F)
+write.table(diet.input, file = "data/03_make_newick_tree/fl100_final_all_foods.txt", sep="\t",quote = F, row.names=F)
