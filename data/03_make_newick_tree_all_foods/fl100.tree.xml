@@ -8739,11 +8739,6 @@
                 <branch_length>1.0</branch_length>
                 <property applies_to="clade" datatype="xsd:string" id_ref="clade_marker_color" ref="A:1">#FE9700</property>
                 <clade>
-                  <name>Breakfast_bar_cereal_crust_with_fruit_filling_lowfat</name>
-                  <branch_length>1.0</branch_length>
-                  <property applies_to="clade" datatype="xsd:string" id_ref="clade_marker_color" ref="A:1">#FE9700</property>
-                </clade>
-                <clade>
                   <name>Granola_bar_oats_sugar_raisins_coconut</name>
                   <branch_length>1.0</branch_length>
                   <property applies_to="clade" datatype="xsd:string" id_ref="clade_marker_color" ref="A:1">#FE9700</property>
@@ -16003,7 +15998,7 @@
                   <property applies_to="clade" datatype="xsd:string" id_ref="clade_marker_color" ref="A:1">#5DD047</property>
                 </clade>
                 <clade>
-                  <name>Vegetable_beef_soup_prepared_with_water</name>
+                  <name>Vegetable_beef_soup_canned_prepared_with_water_or_readytoserve</name>
                   <branch_length>1.0</branch_length>
                   <property applies_to="clade" datatype="xsd:string" id_ref="clade_marker_color" ref="A:1">#5DD047</property>
                 </clade>
@@ -17852,7 +17847,7 @@
                   <property applies_to="clade" datatype="xsd:string" id_ref="clade_marker_color" ref="A:1">#C91ACB</property>
                 </clade>
                 <clade>
-                  <name>Soft_drink_fruitflavored_caffeine_free</name>
+                  <name>Soft_drink_fruit_flavored_caffeine_free</name>
                   <branch_length>1.0</branch_length>
                   <property applies_to="clade" datatype="xsd:string" id_ref="clade_marker_color" ref="A:1">#C91ACB</property>
                 </clade>

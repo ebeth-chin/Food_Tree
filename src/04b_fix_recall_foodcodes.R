@@ -15,6 +15,7 @@ source("lib/jitter.duplicate.foodcodes.R")
 ##########################
 #fix duplicated foodcodes#
 ##########################
+set.seed(0)
 jitter.duplicate.foodcodes(items = "data/04_get_abundance/fl100_recalls_qcd.csv",
                            foodcode_col = "FoodCode",
                            duplicated_codes= "data/02_foodcode_curation/foodcodes_duplicated_with_jitter.txt", #don't use the formatted one

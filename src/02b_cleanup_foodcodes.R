@@ -1,7 +1,7 @@
 #purpose: 
 #now that we know which food codes are duplicated and which 2014 foodcodes can be converted to a 2016 counterpart
 #we will tidy these up in the final food list. 
-
+set.seed(0)
 setwd("/Users/elizabeth.chin/Desktop/milk/Food_Tree/")
 #bring in the items
 items<- read.table("data/00_formatted_foods/ITEMS_formatted.txt", sep="\t", header=T)
@@ -41,7 +41,6 @@ jitter.clean<- read.table("data/02_foodcode_curation/foodcodes_duplicated_with_j
 jitter2<- cbind(jitter.clean,jitter$FoodCode.jitter)
 colnames(jitter2)<- c("FoodCode", "Food_Description", "FoodCode.jitter")
 write.table(jitter2, "data/02_foodcode_curation/foodcodes_duplicated_with_jitter_formatted.txt", row.names = F, quote=F, sep="\t")
-
 
 
 ##############################
@@ -101,9 +100,12 @@ diet$FoodCode<- trimws(diet$FoodCode)
 diet.input<- diet %>% filter(Food_Description != "") %>% #no blank food descriptions (from ASA24 system errors)
     .[!duplicated(.$FoodCode),] %>% #no duplicated foodcodes- 2412 (FoodCode == 9 is excluded, which only occurs due to system/reporting errors)
   dplyr::select(FoodCode, Food_Description) #just get relevant columns
-
+dim(diet.input) #2412 x 2
+length(unique(diet.input$FoodCode)) #2412
+length(unique(diet.input$Food_Description)) #2412
 ################################
 # save file for graphlan input #
 ################################
 colnames(diet.input)<- c("FoodID", "Main.food.description") #this is what the function make.food.tree requires
-write.table(diet.input, file = "data/03_make_newick_tree/fl100_final_all_foods.txt", sep="\t",quote = F, row.names=F)
+write.table(diet.input, file = "data/03_make_newick_tree_all_foods/fl100_final_all_foods.txt", sep="\t",quote = F, row.names=F)
+

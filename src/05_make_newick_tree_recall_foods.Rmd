@@ -10,12 +10,15 @@ We find the overlap of the two files, using the file structure of the FL100 Food
 
 
 ```{r}
+set.seed(0)
+library(dplyr)
+library(gplots)
 #input for otu table-- from QC'd recalls
 amts<- read.delim("../data/04_get_abundance/recalls_average_g.txt", header=T, sep = "\t") #13339 x 3 correct
 colnames(amts)
 length(unique(amts$UserName)) #350, correct
 length(unique(amts$FoodCode)) #2125, correct 
-
+#The food description is missing 
 ```
 
 ```{r}
@@ -81,21 +84,26 @@ identical(og_otu, new_otu) #TRUE we're good
 
 is it identical to the file sent to mary 02/11/2020?
 ```{r}
-mary<- read.delim("../data/04_get_abundance/fl100_otu_abundance_sent_to_mary_021120.txt", sep= "\t", header=T)
+mary<- read.delim("../data/04_get_abundance/archive_data/fl100_otu_abundance_sent_to_mary_021120.txt", sep= "\t", header=T)
 
 identical(mary, new_otu) #FALSE
-identical(mary[,2:351], new_otu[,2:351]) #values are identical
+identical(mary[,2:351], new_otu[,2:351]) #FALSE
 
-diffs<- anti_join(mary[,c(1,352)], new_otu[,c(1,352)])
-#the difference is because: in 02b_cleanup_foodcodes.Rmd, lines 100-103 selects just one example of each foodcode (after QC),for some reason this time it picked different versions of: 
-# new: Vegetable beef soup canned prepared with water or readytoserve
-# old: Vegetable beef soup prepared with water 
-# new: Soft drink fruit flavored caffeine free
-# old: Soft drink fruitflavored caffeine free	
+diffs<- anti_join(mary, new_otu) #diffs are due to very small differences in rounding (like, 4th or 5th decimal )
 ```
+
+
 ```{r}
-another_otu<- read.delim("../data/04_get_abundance/fl100_otu_abundance_041420.txt", sep = "\t", header = T)
-identical(another_otu, new_otu)
-identical(another_otu[,2:351], mary[,2:351])
+
+c<- read.csv("../data/04_get_abundance/archive_data/recalls_foodcodes_qcd.csv", header=T) #created 02/11/2020
+d<- read.csv("../data/04_get_abundance/archive_data/recalls_foodcodes_qcd.csv", header=T) #created 04/15/2020
+identical(c, d) #TRUE
+
+a<- read.delim("../data/04_get_abundance/archive_data/recalls_average_g.txt", header=T, sep = "\t")
+b<- read.delim("../data/04_get_abundance/recalls_average_g.txt", header=T, sep="\t")
+identical(a, b)
+y<- anti_join(a, b)
+
+#confirmed, if the input before averaging is identical, but the averaged amounts are slightly different-- it's due to rounding errors (and also I checked in excel, 04/15/2020)
 ```
 

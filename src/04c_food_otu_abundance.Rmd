@@ -18,24 +18,26 @@ some examples to check:
 
 
 ```{r}
+set.seed(0)
 #import data 
 recalls.use<- read.csv("../data/04_get_abundance/recalls_foodcodes_qcd.csv", header=T) #19373 x 111, correct n of rows. 
 ```
 
+
 ```{r}
-# sum total grams of each food eaten within a record
-otu.total <- aggregate(FoodAmt ~ UserName +FoodCode, data=recalls.use,FUN="sum")
+# sum total grams of each food eaten per subject
+otu.total <- aggregate(FoodAmt ~ UserName + FoodCode , data=recalls.use,FUN="sum") #13339 x 3 can't use Food Description because that hasn't been uniquified yet (i.e. includes variations like W/OIL. That gets cleaned up in the next part)
 #now we have to merge it with the frequency or else aggregate won't divide by the total n of recalls (since not all foods appear in every recall) 
-recalls.tmp<- unique(recalls.use[,c("UserName", "RecallNo")])
+recalls.tmp<- unique(recalls.use[,c("UserName", "RecallNo")]) #1026
 athome<- plyr::count(recalls.tmp, "UserName") #350 subjects
-otu.freq<- merge(otu.total, athome, by = "UserName")
+otu.freq<- merge(otu.total, athome, by = "UserName") #13339
 otu.freq$avg <- otu.freq$FoodAmt/otu.freq$freq
 ```
 
 ```{r}
 otu.save<- otu.freq %>% select(UserName, FoodCode, avg)
 colnames(otu.save)<-c("UserName", "FoodCode", "FoodAmt") #the 'avg' column needs to be named "FoodAmt" for the below function
-write.table(otu.save, "../data/04_get_abundance/recalls_average_g_041420.txt", sep="\t", row.names=F, quote=F)
+write.table(otu.save, "../data/04_get_abundance/recalls_average_g.txt", sep="\t", row.names=F, quote=F)
 ```
 
 ```{r}
@@ -55,7 +57,7 @@ source("../lib/make.food.otu.R")
 make.food.otu(food_records_fn = "../data/04_get_abundance/recalls_average_g.txt" ,
               food_record_id = "UserName", 
               food_taxonomy_fn= "../data/03_make_newick_tree_all_foods/fl100_newick_taxonomy_all_foods.txt", 
-              output_fn="../data/04_get_abundance/fl100_otu_abundance_041420.txt")
+              output_fn="../data/04_get_abundance/fl100_otu_abundance.txt")
 
 ```
 
