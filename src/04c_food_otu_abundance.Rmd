@@ -35,7 +35,7 @@ otu.freq$avg <- otu.freq$FoodAmt/otu.freq$freq
 ```{r}
 otu.save<- otu.freq %>% select(UserName, FoodCode, avg)
 colnames(otu.save)<-c("UserName", "FoodCode", "FoodAmt") #the 'avg' column needs to be named "FoodAmt" for the below function
-#write.table(otu.save, "../data/04_get_abundance/recalls_average_g.txt", sep="\t", row.names=F, quote=F)
+write.table(otu.save, "../data/04_get_abundance/recalls_average_g_041420.txt", sep="\t", row.names=F, quote=F)
 ```
 
 ```{r}
@@ -55,7 +55,7 @@ source("../lib/make.food.otu.R")
 make.food.otu(food_records_fn = "../data/04_get_abundance/recalls_average_g.txt" ,
               food_record_id = "UserName", 
               food_taxonomy_fn= "../data/03_make_newick_tree_all_foods/fl100_newick_taxonomy_all_foods.txt", 
-              output_fn="../data/04_get_abundance/fl100_otu_abundance.txt")
+              output_fn="../data/04_get_abundance/fl100_otu_abundance_041420.txt")
 
 ```
 
