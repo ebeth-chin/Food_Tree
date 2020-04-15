@@ -10,7 +10,34 @@ We find the overlap of the two files, using the file structure of the FL100 Food
 
 
 ```{r}
+#input for otu table-- from QC'd recalls
+amts<- read.delim("../data/04_get_abundance/recalls_average_g.txt", header=T, sep = "\t") #13339 x 3 correct
+colnames(amts)
+length(unique(amts$UserName)) #350, correct
+length(unique(amts$FoodCode)) #2125, correct 
 
+```
+
+```{r}
+#input of the list of all QC'd fl100 foods and descriptions 
+foodlist<- read.delim("../data/03_make_newick_tree_all_foods/fl100_final_all_foods.txt", sep = "\t", header=T) #2412 x 2 correct
+colnames(foodlist)
+length(unique(foodlist$FoodID)) #2412 correct
+length(unique(foodlist$Main.food.description)) #2412
+```
+
+now find the overlap 
+```{r}
+overlap<- foodlist %>% filter(FoodID %in% amts$FoodCode)
+dim(overlap) #2125, correct-- it's the same n rows as 'amts' 
+
+#double check
+venn(list(amts$FoodCode, overlap$FoodID)) #yep
+venn(list(unique(amts$FoodCode), unique(overlap$FoodID))) #yep
+venn(list(unique(amts$FoodCode), unique(foodlist$FoodID))) #2125 overlap, 287 foods are not included in qc'd recalls 
+
+#save this 
+write.table(overlap, "../data/05_make_newick_tree_foods_from_recalls/fl100_final_foods_from_recalls.txt", sep="\t", quote = F, row.names=F)
 ```
 
 
@@ -26,9 +53,49 @@ source("../food_tree_gits/Food_Tree-master/R/lib/newick.tree.r")
 ```
 
 ```{r}
-make.food.tree(nodes="../data/03_make_newick_tree/NodeLabelsMCT.txt",
-               food_database_fn = "../data/03_make_newick_tree/fl100_final_foods.txt", 
-               output_tree_fn = "../data/03_make_newick_tree/fl100_newick_tree.txt", 
-               output_taxonomy_fn = "../data/03_make_newick_tree/fl100_newick_taxonomy.txt")
+make.food.tree(nodes="../data/03_make_newick_tree_all_foods/NodeLabelsMCT.txt",
+               food_database_fn = "../data/05_make_newick_tree_foods_from_recalls/fl100_final_foods_from_recalls.txt", 
+               output_tree_fn = "../data/05_make_newick_tree_foods_from_recalls/fl100_newick_tree_from_recalls.txt", 
+               output_taxonomy_fn = "../data/05_make_newick_tree_foods_from_recalls/fl100_newick_taxonomy_from_recalls.txt")
+```
+
+
+for a sanity check, re-make an otu table using this exported taxonomy list and compare the outputs to make sure they are identical
+
+```{r}
+source("../lib/make.food.otu.R")
+
+make.food.otu(food_records_fn = "../data/04_get_abundance/recalls_average_g.txt" ,
+              food_record_id = "UserName", 
+              food_taxonomy_fn= "../data/05_make_newick_tree_foods_from_recalls/fl100_newick_taxonomy_from_recalls.txt", 
+              output_fn="../data/05_make_newick_tree_foods_from_recalls/fl100_otu_abundance_tmp_recallsonly.txt")
+
+```
+
+```{r}
+og_otu<- read.delim("../data/04_get_abundance/fl100_otu_abundance.txt", sep = "\t", header=T)
+new_otu<- read.delim("../data/05_make_newick_tree_foods_from_recalls/fl100_otu_abundance_tmp_recallsonly.txt", sep = "\t", header=T)
+
+identical(og_otu, new_otu) #TRUE we're good 
+```
+
+is it identical to the file sent to mary 02/11/2020?
+```{r}
+mary<- read.delim("../data/04_get_abundance/fl100_otu_abundance_sent_to_mary_021120.txt", sep= "\t", header=T)
+
+identical(mary, new_otu) #FALSE
+identical(mary[,2:351], new_otu[,2:351]) #values are identical
+
+diffs<- anti_join(mary[,c(1,352)], new_otu[,c(1,352)])
+#the difference is because: in 02b_cleanup_foodcodes.Rmd, lines 100-103 selects just one example of each foodcode (after QC),for some reason this time it picked different versions of: 
+# new: Vegetable beef soup canned prepared with water or readytoserve
+# old: Vegetable beef soup prepared with water 
+# new: Soft drink fruit flavored caffeine free
+# old: Soft drink fruitflavored caffeine free	
+```
+```{r}
+another_otu<- read.delim("../data/04_get_abundance/fl100_otu_abundance_041420.txt", sep = "\t", header = T)
+identical(another_otu, new_otu)
+identical(another_otu[,2:351], mary[,2:351])
 ```
 
