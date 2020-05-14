@@ -23,7 +23,7 @@ length(unique(amts$FoodCode)) #2125, correct
 
 ```{r}
 #input of the list of all QC'd fl100 foods and descriptions 
-foodlist<- read.delim("../data/03_make_newick_tree_all_foods/fl100_final_all_foods.txt", sep = "\t", header=T) #2412 x 2 correct
+foodlist<- read.delim("../data/03_make_newick_tree_all_foods/fl100_final_all_foods.txt", sep = "\t", header=T, colClasses = c("character", "character")) #2412 x 2 correct
 colnames(foodlist)
 length(unique(foodlist$FoodID)) #2412 correct
 length(unique(foodlist$Main.food.description)) #2412
