@@ -1,0 +1,97 @@
+---
+title: "07_newicktree_nowater"
+---
+
+Make a newick tree with no water (L2: Water_noncarbonated )
+
+After reviewing the input otu table, I see that 9400000 (Water used as an ingredient) and 20000000 (Meat, NFS) do not have L2-4 because their foodcodes get put into scientific notation and even though I change foodcodes with scientific = F, they still don't get recognized. 94000000 will get removed because it should be part of L2 water_noncarbonated. I will manually place Meat,NFS to L2: Meat, NS_as_to_type in the food tree 
+
+```{r}
+set.seed(0)
+library(dplyr)
+library(gplots)
+#input for otu table-- from QC'd recalls
+amts<- read.delim("../data/04_get_abundance/recalls_average_g.txt", header=T, sep = "\t") #13339 x 3 correct
+colnames(amts)
+length(unique(amts$UserName)) #350, correct
+length(unique(amts$FoodCode)) #2125, correct 
+
+#fix the food codes coming up as scientific notation 
+amts$FoodCode_tmp<- as.integer(format(amts$FoodCode, scientific = F))
+for(i in 1:nrow(amts)){
+  if(amts[i,"FoodCode_tmp"] == "94000000"){
+    amts[i,"FoodCode"] <- as.integer(94000000)
+  }else if(amts[i,"FoodCode_tmp"] == "20000000"){
+    amts[i,"FoodCode"] <- as.integer(20000000)
+  }
+}
+
+#The food description is missing 
+```
+
+remove subjects consuming water variabiles (^94 and ^Water)
+```{r}
+library(stringr)
+water<- amts %>% filter(str_detect(as.integer(FoodCode), regex("^94"))) #415 subjects
+nowater<- amts %>% filter(!str_detect(as.integer(FoodCode), regex("^94"))) #12924 subjects, correct, 2122 unique foodcodes
+write.table(nowater, "../data/04_get_abundance/recalls_average_g_nowater.txt",  sep="\t", row.names=F, quote=F)
+```
+
+get the taxonomy
+```{r}
+tax<- read.delim("../data/05_make_newick_tree_foods_from_recalls/fl100_newick_taxonomy_from_recalls.txt", sep = "\t", header=T, colClasses = "character")
+
+tax_nowater<- tax %>% filter(!str_detect(as.integer(FoodID), "^94"))
+
+write.table(tax_nowater, "../data/05_newicktree_nowater/fl100_taxonomy_nowater_for_otu.txt", sep="\t", quote = F, row.names=F)
+```
+
+```{r}
+source("../lib/make.food.otu.R")
+
+make.food.otu(food_records_fn = "../data/04_get_abundance/recalls_average_g.txt" ,
+              food_record_id = "UserName", 
+              food_taxonomy_fn= "../data/05_newicktree_nowater/fl100_taxonomy_nowater_for_otu.txt", 
+              output_fn="../data/05_newicktree_nowater/fl100_otu_abundance_nowater.txt")
+
+```
+
+
+
+
+# food list
+```{r}
+foodlist<- read.delim("../data/05_make_newick_tree_foods_from_recalls/fl100_final_foods_from_recalls.txt", sep = "\t", header=T, 
+                      colClasses = c("character", "character")) #2125 x 2 correct (2125 unique rows)
+#remove water
+foodlist_nowater<- foodlist %>% filter(!str_detect(as.integer(FoodID), regex("^94"))) #meat NFS is still messed up
+
+for(i in 1:nrow(foodlist_nowater)){
+  if(foodlist_nowater[i, "Main.food.description"] == "Meat_NFS"){
+    foodlist_nowater[i,"FoodID"] <- as.integer(20000000)
+  }
+}
+
+
+write.table(foodlist_nowater, file = "../data/05_newicktree_nowater/fl100_foods_nowater.txt", sep="\t", quote = F, row.names=F)
+```
+
+required files: 
+1. nodes_fn == taxonomy, defined by FNDDS code (not per food, the general rules). Will use Knight lab file.   
+2. food_database_fn == contains ASA24 FoodCodes and Food Descriptions   
+
+# make tree
+
+```{r}
+source("../lib/make.food.tree.r")
+source("../food_tree_gits/Food_Tree-master/R/lib/newick.tree.r")
+```
+
+```{r}
+make.food.tree(nodes="../data/03_make_newick_tree_all_foods/NodeLabelsMCT.txt",
+               food_database_fn = "../data/05_newicktree_nowater/fl100_foods_nowater.txt", 
+               output_tree_fn = "../data/05_newicktree_nowater/fl100_newick_tree_nowater.txt", 
+               output_taxonomy_fn = "../data/05_newicktree_nowater/fl100_newick_taxonomy_nowater.txt")
+```
+
+
