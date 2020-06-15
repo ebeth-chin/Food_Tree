@@ -1,0 +1,133 @@
+---
+title: "08_NewickTree_w_FilteredSamples"
+---
+
+This notebook builds a food tree/taxonomy/otu table (w/ water removed) after filtering to remove the following subjects, as requested by MK 06/12/2020:   
+
+5022
+6066
+6072
+6082
+6091
+7063
+8012
+
+
+```{r}
+library(dplyr)
+avgs<- read.delim("../data/04_get_abundance/recalls_average_g_nowater.txt", header=T, sep = "\t") #this has water removed
+#12924 x 4
+length(unique(avgs$UserName)) #350 unique subjects 
+length(unique(avgs$FoodCode)) #2122 unique foods 
+
+#fix the food codes coming up as scientific notation 
+avgs$FoodCode_tmp<- as.integer(format(avgs$FoodCode, scientific = F))
+for(i in 1:nrow(avgs)){
+  if(avgs[i,"FoodCode_tmp"] == "94000000"){
+    avgs[i,"FoodCode"] <- as.integer(94000000)
+  }else if(avgs[i,"FoodCode_tmp"] == "20000000"){
+    avgs[i,"FoodCode"] <- as.integer(20000000)
+  }
+}
+
+subjrm<- read.delim("../data/06_filter_samples/FoodSamplesToDiscard.txt", header=F, sep = "\t") #these are the subjects to remove
+subjrm <- as.character(subjrm$V1)
+subjrm #7 subjects 
+```
+
+```{r}
+'%nin%' <- Negate("%in%")
+#filter the averages table to remove subjects 
+filt<- avgs %>% filter(UserName %nin% subjrm)
+length(unique(filt$UserName)) #343, correct- 7 subjects removed 
+length(unique(filt$FoodCode)) #2107 unique foods 
+
+write.table(filt, "../data/06_filter_samples/recalls_average_g_filt.txt",  sep="\t", row.names=F, quote=F)
+```
+
+```{r}
+source("../lib/make.food.otu.R")
+
+make.food.otu(food_records_fn = "../data/06_filter_samples/recalls_average_g_filt.txt" ,
+              food_record_id = "UserName", 
+              food_taxonomy_fn= "../data/05_newicktree_nowater/fl100_taxonomy_nowater_for_otu.txt", 
+              output_fn="../data/06_filter_samples/fl100_otu_abundance_filt.txt")
+```
+
+check the output of the otu table you just made 
+```{r}
+otu<- read.delim("../data/06_filter_samples/fl100_otu_abundance_filt.txt", header=T, sep = "\t", stringsAsFactors = F)
+dim(otu) #2107 foods x 345 cols (343 subjects + Taxconomny & FoodCode), correct
+otu %>% dplyr::select(X.FoodCode, taxonomy) %>% View() #Meat, NFS taxonomy is incorrect. 
+```
+
+Fix Meat, NFS taxonomy in OTU table: 
+
+currently: 
+L1_Meat_Poultry_Fish_and_Mixtures;L2_;L3_;L4_;L5_;Meat_NFS
+
+Correct: 
+L1_Meat_Poultry_Fish_and_Mixtures;L2_Meat;L3_Meat_NS_as_to_type;L4_;L5_;Meat_NFS
+
+```{r}
+tmp<- otu
+for(i in 1:nrow(tmp)){
+  if(tmp[i, "X.FoodCode"] == 'Meat NFS'){
+    tmp[i, "taxonomy"] <- "L1_Meat_Poultry_Fish_and_Mixtures;L2_Meat;L3_Meat_NS_as_to_type;L4_;L5_;Meat_NFS"
+  }
+}
+
+tmp %>% dplyr::select(X.FoodCode, taxonomy) %>% filter(X.FoodCode == "Meat NFS") %>% View() #looks good
+
+write.table(tmp, "../data/06_filter_samples/fl100_otu_abundance_filt.txt", row.names = F, sep = "\t", quote=F)
+```
+
+
+# get a unique list of foods 
+
+```{r}
+#import the food list w/ water fixed. this contains all the unique foods and food descriptions 
+foodlist<- read.delim("../data/05_newicktree_nowater/fl100_foods_nowater.txt", header=T, sep = "\t") #2122 foods, same as above 
+
+#get a unique list of foodcodes from the list of filtered subjects 
+foodfilt<- unique(filt$FoodCode) #2107 
+
+#now keep only the foods in the filtered food list
+foodkeep<- foodlist %>% filter(FoodID %in% foodfilt)
+length(unique(foodkeep$FoodID)) #2107 correct
+
+for(i in 1:nrow(foodkeep)){
+  if(foodkeep[i, "Main.food.description"] == "Meat_NFS"){
+    foodkeep[i,"FoodID"] <- as.integer(20000000)
+  }
+}
+
+
+write.table(foodkeep, "../data/06_filter_samples/fl100_foods_filt.txt",sep="\t", quote = F, row.names=F)
+```
+
+required files: 
+1. nodes_fn == taxonomy, defined by FNDDS code (not per food, the general rules). Will use Knight lab file.   
+2. food_database_fn == contains ASA24 FoodCodes and Food Descriptions   
+
+# make tree
+
+```{r}
+source("../lib/make.food.tree.r")
+source("../food_tree_gits/Food_Tree-master/R/lib/newick.tree.r")
+```
+
+```{r}
+make.food.tree(nodes="../data/03_make_newick_tree_all_foods/NodeLabelsMCT.txt",
+               food_database_fn = "../data/06_filter_samples/fl100_foods_filt.txt", 
+               output_tree_fn = "../data/06_filter_samples/fl100_newick_tree_filt.txt", 
+               output_taxonomy_fn = "../data/06_filter_samples/fl100_newick_taxonomy_filt.txt")
+```
+_
+check the outputs 
+```{r}
+tax_filt<- read.table("../data/06_filter_samples/fl100_newick_taxonomy_filt_tmp.txt", header=T, sep = "\t", stringsAsFactors = F)
+dim(tax_filt) #2107 x 3
+#Meat, NFS taxonomy is correct and needs to be manually curated. 
+```
+
