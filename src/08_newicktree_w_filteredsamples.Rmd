@@ -126,8 +126,8 @@ make.food.tree(nodes="../data/03_make_newick_tree_all_foods/NodeLabelsMCT.txt",
 _
 check the outputs 
 ```{r}
-tax_filt<- read.table("../data/06_filter_samples/fl100_newick_taxonomy_filt_tmp.txt", header=T, sep = "\t", stringsAsFactors = F)
+tax_filt<- read.table("../data/06_filter_samples/fl100_newick_taxonomy_filt.txt", header=T, sep = "\t", stringsAsFactors = F)
 dim(tax_filt) #2107 x 3
-#Meat, NFS taxonomy is correct and needs to be manually curated. 
+#Meat, NFS taxonomy is correct
 ```
 
