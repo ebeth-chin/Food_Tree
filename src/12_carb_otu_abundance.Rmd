@@ -1,0 +1,162 @@
+---
+title: "12_carb_otu_abundance"
+---
+
+purpose: to average the TOTAL CARBOHYDRATE (CARB) amounts over 2 or 3 recalls as per CBS suggestion 06/03/2021
+
+**water needs to be removed**
+**subjects 5022 6066 6072 6082 6091 7063 8012** need to be removed 
+
+Previous QC'ing of recalls included:  
+  * Recalls were excluded if they failed QC  
+  * Subjects were excluded if they had fewer than 2 at-home recalls   
+
+some examples to check:   
+
+Subject 5001 consumed FoodID 94000100 (water, tap) 15 times. They have 3 recalls. The avg fiber is 0 
+Subject 5001 consumed FoodID 26213140 (squid, breaded) 1 time (0.1875 g FIBE in recall 4). They have 3 recalls. The avg fiber is 0.0625. 
+
+Subj 8061 conusumed FoodID 57110000 (kellog's bran flakes) 3 times (38.25 + 38.25 + 19.125). They have 3 recalls. The avg fiber is 31.875. 
+
+```{r}
+set.seed(0)
+library(tidyverse)
+#import data 
+recalls.use<- read.csv("../data/04_get_abundance/recalls_foodcodes_qcd.csv", header=T) #19373 x 111, correct n of rows. 
+```
+
+```{r}
+summary(as.factor(recalls.use$RecallNo)) #no in-person recall (only 2-4)
+```
+
+
+```{r}
+# sum total grams of each food eaten per subject
+otu.total <- aggregate(CARB ~ UserName + FoodCode , data=recalls.use,FUN="sum") #13339 x 3 can't use Food Description because that hasn't been uniquified yet (i.e. includes variations like W/OIL. That gets cleaned up in the next part)
+#now we have to merge it with the frequency or else aggregate won't divide by the total n of recalls (since not all foods appear in every recall) 
+recalls.tmp<- unique(recalls.use[,c("UserName", "RecallNo")]) #1026
+athome<- plyr::count(recalls.tmp, "UserName") #350 subjects
+otu.freq<- merge(otu.total, athome, by = "UserName") #13339
+otu.freq$avg <- otu.freq$CARB/otu.freq$freq
+```
+
+```{r}
+otu.cho<- otu.freq %>% select(UserName, FoodCode, avg) #this is the average protein values for all foods and subj passing qc (i.e. including water and the 7 subjects mary asked to remove)
+colnames(otu.cho)<-c("UserName", "FoodCode", "FoodAmt") #the 'avg' column needs to be named "FoodAmt" for the below function
+```
+
+```{r}
+#sanity check-- how many unique foods are in here? 
+length(unique(recalls.use$FoodCode)) #2129
+length(unique(otu.cho$FoodCode)) #2125
+
+'%nin%'<- Negate('%in%')
+which<- recalls.use %>% filter(FoodCode %nin% unique(otu.cho$FoodCode)) %>% select(FoodCode, Food_Description) %>% unique()
+#correct, the 4 foodcodes are generated from ASA24 system errors and all had NA values for nutrients etc. hooooray
+which$FoodCode #9 1000969500 1888968601         NA
+```
+
+sanity checks
+```{r}
+subj5001<- recalls.use %>% dplyr::filter(UserName == 5001) #yes, consumed 94000100 15 times
+subj5002<- recalls.use %>% dplyr::filter(UserName == 5002) #consumed 73402020 sweet potato 3 times (2x in recall 2, 1x in recall 3) (25.9530 + 38.9295 + 51.9060 = 116.7885); subject 5002 has 3 recalls total
+freq5002<- otu.freq %>% filter(UserName == 5002)#foodcode 73402020 average is 116.7885/3 = 38.9295 correct
+
+subj5042 <- recalls.use %>% dplyr::filter(UserName == 5042)# only has 2 recalls, consumed 91302010 Honey 3 times (1x in r2, 2x in r3): 34.608 + 34.608 + 11.536 = 80.752
+freq5042<- otu.freq %>% filter(UserName == 5042) #foodcode 91302010 average is 80.752/40.376, correct
+
+subj5012<- recalls.use %>% dplyr::filter(UserName == 5012) #consumed Milk, NFS 11100000 1x in recall 2, CARB == 0.5917; has 3 recalls; consumed 53220030_Cookie, fig bar 4x, total CARB = 68.064
+freq5012<- otu.freq %>% filter(UserName ==5012) #foodcode 11100000, avg CARB = 0.1972333; foodcode 53220030, avg CARB = 22.688 CORRECT
+```
+
+
+Now we get rid of water: 
+
+first we have to fix foodcodes that show up in sci notation
+```{r}
+#fix the food codes coming up as scientific notation 
+otu.cho$FoodCode_tmp<- as.integer(format(otu.cho$FoodCode, scientific = F))
+for(i in 1:nrow(otu.cho)){
+  if(otu.cho[i,"FoodCode_tmp"] == "94000000"){
+    otu.cho[i,"FoodCode"] <- as.integer(94000000)
+  }else if(otu.cho[i,"FoodCode_tmp"] == "20000000"){
+    otu.cho[i,"FoodCode"] <- as.integer(20000000)
+  }
+}
+
+#The food description is missing 
+```
+
+```{r}
+library(stringr)
+water<- otu.cho %>% filter(str_detect(as.integer(FoodCode), regex("^94"))) #415 entries
+nowater<- otu.cho %>% filter(!str_detect(as.integer(FoodCode), regex("^94"))) #12924 subjects, correct (13339-415), 2122 unique foodcodes
+```
+
+Now remove the sujbects as per Mary's request 06/12/2020
+
+```{r}
+subjrm<- read.delim("../data/06_filter_samples/FoodSamplesToDiscard.txt", header=F, sep = "\t") #these are the subjects to remove
+subjrm <- as.character(subjrm$V1)
+subjrm #7 subjects 
+```
+
+```{r}
+#filter the averages table to remove subjects 
+filt<- nowater %>% filter(UserName %nin% subjrm)
+length(unique(filt$UserName)) #343, correct- 7 subjects removed 
+length(unique(filt$FoodCode)) #2107 unique foods 
+#dim = 12685 x 4
+```
+
+This is the average g of fat with water foods (FoodCode ^94 removed) and the 7 subjects removed
+```{r}
+write.table(filt, file = "../data/10_carb_otu/avg_carb_g.txt", sep="\t", row.names=F, quote=F)
+```
+
+
+Now we make the OTU table
+
+```{r}
+source("../lib/make.food.otu.R")
+
+make.food.otu(food_records_fn = "../data/10_carb_otu/avg_carb_g.txt" ,
+              food_record_id = "UserName", 
+              food_taxonomy_fn= "../data/05_newicktree_nowater/fl100_taxonomy_nowater_for_otu.txt", #this uses the taxonomy for the food tree w/o water
+              output_fn="../data/10_carb_otu/fl100_carb_otu_tmp.txt")
+
+```
+
+Now we need to check whether the taxonomy for Meat, NFS is correct. If the FoodCode is interpreted in scientific notation, then L2-4 don't show up. 
+
+check the output of the otu table you just made 
+```{r}
+otu<- read.delim("../data/10_carb_otu/fl100_carb_otu_tmp.txt", header=T, sep = "\t", stringsAsFactors = F)
+dim(otu) #2107 foods x 345 cols (343 subjects + Taxconomny & FoodCode), correct
+otu %>% dplyr::select(X.FoodCode, taxonomy) %>% View() #Meat NFS taxonomy is incorrect. 
+```
+
+Fix Meat, NFS taxonomy in OTU table: 
+
+currently: 
+L1_Meat_Poultry_Fish_and_Mixtures;L2_;L3_;L4_;L5_;Meat_NFS
+
+Correct: 
+L1_Meat_Poultry_Fish_and_Mixtures;L2_Meat;L3_Meat_NS_as_to_type;L4_;L5_;Meat_NFS
+
+```{r}
+tmp<- otu
+for(i in 1:nrow(tmp)){
+  if(tmp[i, "X.FoodCode"] == 'Meat NFS'){
+    tmp[i, "taxonomy"] <- "L1_Meat_Poultry_Fish_and_Mixtures;L2_Meat;L3_Meat_NS_as_to_type;L4_;L5_;Meat_NFS"
+  }
+}
+
+tmp %>% dplyr::select(X.FoodCode, taxonomy) %>% filter(X.FoodCode == "Meat NFS") %>% View() #looks good
+
+write.table(tmp, "../data/10_carb_otu/fl100_carb_otu.txt", row.names = F, sep = "\t", quote=F)
+```
+
+```{r}
+dim(tmp) #2107 x 345, correct 
+```
