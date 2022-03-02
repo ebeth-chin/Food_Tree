@@ -89,7 +89,7 @@ ab$check<- ifelse(as.character(ab$Main.food.description) == as.character(ab$Food
 
 ac$check<- ifelse(as.character(ac$Main.food.description) == as.character(ac$Food_Description),"yes", "no")
 
-abc$check_ab<- ifelse(as.character(abc$Main.food.descriptio) == as.character(abc$Food_Description.x), 1, 0)
+abc$check_ab<- ifelse(as.character(abc$Main.food.description) == as.character(abc$Food_Description.x), 1, 0)
 abc$check_ac<- ifelse(as.character(abc$Main.food.description) == as.character(abc$Food_Description.y), 1, 0)
 abc$check_bc<- ifelse(as.character(abc$Food_Description.x) == as.character(abc$Food_Description.y), 1, 0)
 abc$check_all<- ifelse(rowSums(abc[,6:8]) == 3, 1, 0)
