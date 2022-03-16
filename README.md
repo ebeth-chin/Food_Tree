@@ -14,5 +14,5 @@ An optional dockerfile is provided to generate a R enviornment identical to the 
 
 And run the container:
 
-`docker run --rm -it -p 8787:8787 -e PASSWORD=yourpasswordhere -v /path/to/Food_Tree_repo:home food_tree_r:1.0`
+`docker run --rm -it -p 8787:8787 -e PASSWORD=yourpasswordhere -v /path/to/Food_Tree_repo:/home food_tree_r:1.0`
 
