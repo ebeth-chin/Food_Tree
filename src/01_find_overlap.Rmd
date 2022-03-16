@@ -8,7 +8,7 @@ Purpose: find overlapping FoodCodes that overlap with what is available in Knigh
 ```{r setup}
 library(dplyr)
 #load in Knight lab food taxonomy
-mct<- read.delim("../food_tree_gits/food_graphlan-master/data/mct.taxonomy.txt", sep="\t")
+mct<- read.delim("../data/00_formatted_foods/MCT_taxonomy_formatted.txt", sep="\t")
 dim(mct)
 
 #now load in the FL100 unique list of foods from ASA24-2016
@@ -92,7 +92,7 @@ ac$check<- ifelse(as.character(ac$Main.food.description) == as.character(ac$Food
 abc$check_ab<- ifelse(as.character(abc$Main.food.description) == as.character(abc$Food_Description.x), 1, 0)
 abc$check_ac<- ifelse(as.character(abc$Main.food.description) == as.character(abc$Food_Description.y), 1, 0)
 abc$check_bc<- ifelse(as.character(abc$Food_Description.x) == as.character(abc$Food_Description.y), 1, 0)
-abc$check_all<- ifelse(rowSums(abc[,6:8]) == 3, 1, 0)
+abc$check_all<- ifelse(rowSums(abc[,5:7]) == 3, 1, 0)
 ```
 
 save these foods that need to be checked
